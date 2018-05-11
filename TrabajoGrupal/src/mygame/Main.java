@@ -1,10 +1,13 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 /**
@@ -30,10 +33,31 @@ public class Main extends SimpleApplication {
 
         rootNode.attachChild(geom);
         
+        rootNode.attachChild(CrearNave());
         
         //C# UNITY MICROSOFT VISUAL STUDIO WINDOWS INTEL NVIDIA <3 <3 <3 <3
     }
 
+    
+    public Node CrearNave(){
+        
+        Node res = new Node();
+        
+        Spatial buggy = assetManager.loadModel("/Models/Buggy/Buggy.j3o");
+        
+        buggy.setLocalTranslation(0, 0.75f, 0);
+        
+        //geometrybuggy = (Geometry) assetManager.loadModel("/Models/Buggy/Buggy.j3o");
+        
+        Material mat = new Material( assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        buggy.scale(3f);
+        buggy.setMaterial(mat);
+        //geometrybuggy.setLocalTranslation(0, -1f, 0);
+        res.attachChild(buggy);
+        
+        return res;
+    }
+    
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
