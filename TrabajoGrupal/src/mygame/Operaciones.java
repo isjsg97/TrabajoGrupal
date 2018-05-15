@@ -1,0 +1,53 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mygame;
+
+import com.jme3.math.Vector3f;
+
+/**
+ *
+ * @author MykexMP
+ */
+public class  Operaciones {
+    
+    public static float DegtoRad(float deg){
+         
+        return (float)Math.PI / 180 * deg;
+    } 
+    
+    public static float RadtoDeg(float rad){
+         
+        return 180 / (float)Math.PI * rad;
+    } 
+    
+    public static Vector3f RestarVectores(Vector3f vfinal, Vector3f vinicial){
+         
+        Vector3f res = new Vector3f(vfinal.x - vinicial.x, vfinal.y - vinicial.y, vfinal.z - vinicial.z);
+            
+        return res;
+    }
+     
+    public static Vector3f SumarVectores(Vector3f vfinal, Vector3f vinicial){
+         
+        Vector3f res = new Vector3f(vfinal.x + vinicial.x, vfinal.y + vinicial.y, vfinal.z + vinicial.z);
+            
+        return res;
+    }
+    
+    public static Vector3f RotarVectorZ(Vector3f vector, float angulo){
+        Vector3f res = new Vector3f(0,0,0);
+        
+        float rad = DegtoRad(angulo);
+        
+        res.x = vector.x * (float)Math.cos(rad) - vector.y * (float)Math.sin(rad);
+        res.y = vector.x * (float)Math.sin(rad) + vector.y * (float)Math.cos(rad);
+        res.z = vector.z;
+        //y' = x sin Î¸ + y cos Î¸
+        
+        return res;
+    }
+    
+}
