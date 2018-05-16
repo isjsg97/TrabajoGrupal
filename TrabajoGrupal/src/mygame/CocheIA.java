@@ -20,29 +20,38 @@ import com.jme3.math.Vector3f;
 public class CocheIA extends RigidBodyControl implements PhysicsTickListener, PhysicsCollisionListener{
 
     
-    private Vector3f velocidad;
     private float velocidadmax;
     
-    private Quaternion rotacion;
+    private float rotRuedas;
+    private float velocidad;
+    private float tiempo;
     
     public CocheIA(float velmax){
         velocidadmax = velmax;
     }
     
-    public void Velocidad(Vector3f vel){
+    public void Velocidad(float vel){
         velocidad = vel;
     }
     
-    public Vector3f Velocidad(){
+    public float Velocidad(){
         return velocidad;
     }
     
-    public void Rotacion(Quaternion rot){
-        rotacion = rot;
+    public void Rotacion(float rot){
+        rotRuedas = rot;
     }
     
-    public Quaternion Rotacion(){
-        return rotacion;
+    public float Rotacion(){
+        return rotRuedas;
+    }
+    
+    public void Tiempo(float time){
+        tiempo = time;
+    }
+    
+    public float Tiempo(){
+        return tiempo;
     }
     
     @Override
