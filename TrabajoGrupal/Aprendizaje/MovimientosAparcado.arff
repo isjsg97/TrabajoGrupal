@@ -1,0 +1,24 @@
+@relation MovimientosAparcado
+
+@attribute distanciaCocheDelante numeric
+@attribute distanciaCocheAtras numeric
+
+@attribute velocidad1 numeric
+@attribute angulo1 numeric
+@attribute tiempo1 numeric
+
+@attribute velocidad2 numeric
+@attribute angulo2 numeric
+@attribute tiempo2 numeric
+
+@attribute velocidad3 numeric
+@attribute angulo3 numeric
+@attribute tiempo3 numeric
+
+@attribute velocidad4 numeric
+@attribute angulo4 numeric
+@attribute tiempo4 numeric
+
+@attribute movimientoscorrectos {si, no}
+
+@data

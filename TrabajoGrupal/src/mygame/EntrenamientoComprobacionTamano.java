@@ -24,6 +24,11 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     public EntrenamientoComprobacionTamano(CocheIA ag, Main m) {
         super(ag, m);
     }
+    
+    @Override
+    void PreparacionDatos() {
+        
+    }
 
     @Override
     void PreparacionEscenario() {
@@ -65,6 +70,11 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     @Override
     void GuardarFracaso() {
         
+    } 
+
+    @Override
+    void ReCalculo() {
+       
     }
     
 }

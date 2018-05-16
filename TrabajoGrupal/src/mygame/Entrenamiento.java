@@ -24,7 +24,11 @@ public abstract class Entrenamiento {
     
     abstract void PreparacionAgente();
     
+    abstract void PreparacionDatos();
+    
     abstract boolean EsExito();
+    
+    abstract void ReCalculo();
     
     abstract void GuardarExito();
     
