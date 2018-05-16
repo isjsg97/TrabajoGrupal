@@ -12,6 +12,7 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 /**
  *
@@ -26,8 +27,11 @@ public class CocheIA extends RigidBodyControl implements PhysicsTickListener, Ph
     private float velocidad;
     private float tiempo;
     
-    public CocheIA(float velmax){
+    private Spatial spatial;
+    
+    public CocheIA(float velmax, Spatial spat){
         velocidadmax = velmax;
+        spatial = spat;
     }
     
     public void Velocidad(float vel){
@@ -52,6 +56,10 @@ public class CocheIA extends RigidBodyControl implements PhysicsTickListener, Ph
     
     public float Tiempo(){
         return tiempo;
+    }
+    
+    public Spatial Spatial(){
+        return spatial;
     }
     
     @Override

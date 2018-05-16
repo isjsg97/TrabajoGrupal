@@ -1,0 +1,7 @@
+@relation ComprobacionTamano
+
+@attribute distanciaCocheDelante numeric
+@attribute distanciaCocheAtras numeric
+@attribute tamanosuficiente {si, no}
+
+@data

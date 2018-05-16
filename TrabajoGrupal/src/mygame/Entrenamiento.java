@@ -12,9 +12,11 @@ package mygame;
 public abstract class Entrenamiento {
     
     CocheIA agente;
+    Main main;
     
-    public Entrenamiento(CocheIA ag){
+    public Entrenamiento(CocheIA ag, Main m){
         agente = ag;
+        main = m;
     }
     
     
