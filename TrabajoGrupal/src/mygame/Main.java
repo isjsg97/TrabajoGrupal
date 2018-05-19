@@ -12,6 +12,9 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import weka.classifiers.Classifier;
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.trees.*;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -33,7 +36,14 @@ public class Main extends SimpleApplication {
         PonerTerreno();
         PonerCamara();
         
-        Box b = new Box(1, 1, 1);
+        Node cocheIA = CrearCoche();
+        CocheIA cocheIAScript = CrearCocheIA(cocheIA);
+        
+        Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "", 20, ObtenerClasificador());
+        
+        
+        entrenamiento.Entrenar();
+        /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
 
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -42,16 +52,16 @@ public class Main extends SimpleApplication {
 
         rootNode.attachChild(geom);
         
-        rootNode.attachChild(CrearCoche());
+        rootNode.attachChild(CrearCoche());*/
         
         //C# UNITY MICROSOFT VISUAL STUDIO WINDOWS INTEL NVIDIA <3 <3 <3 <3
     }
     
     
-    public void CrearCocheIA(){
+    public CocheIA CrearCocheIA(Node coche){
         
         
-        
+        return null;
     }
     
     public Node CrearCoche(){
@@ -72,6 +82,16 @@ public class Main extends SimpleApplication {
         buggy.setMaterial(mat);
         //geometrybuggy.setLocalTranslation(0, -1f, 0);
         res.attachChild(buggy);
+        
+        return res;
+    }
+    
+    
+    public Classifier ObtenerClasificador(){
+        Classifier res; 
+        
+        //res = new M5P();
+        res = new MultilayerPerceptron();
         
         return res;
     }
