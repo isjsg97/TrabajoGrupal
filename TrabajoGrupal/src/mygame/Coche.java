@@ -81,7 +81,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     @Override
     public void physicsTick(PhysicsSpace space, float tpf) {
         if(tiempo > 0 && colision == null){
-            Avanzar();
+            Avanzar(tpf);
             tiempo -= tpf;
             SincronizarRigidboyTransform();
         }
@@ -94,7 +94,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     
     
-    void Avanzar(){
+    void Avanzar(float tpf){
         
     }
     
