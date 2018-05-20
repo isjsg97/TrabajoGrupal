@@ -10,6 +10,8 @@ import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
@@ -93,9 +95,18 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     void Avanzar(float tpf){
         
+        
+        
     }
     
     void SincronizarRigidboyTransform(){
         
+        //Obtengo el transform del RigidBody
+        Quaternion rotRigid = spatial.getControl(RigidBodyControl.class).getPhysicsRotation();
+        Vector3f posRigid = spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        
+        //Sincronizo el Spatial con su RigidBody
+        spatial.setLocalRotation(rotRigid);
+        spatial.setLocalTranslation(posRigid);
     }
 }
