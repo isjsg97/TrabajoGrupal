@@ -99,7 +99,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         
        if (velocidad!=0) {
            fisicaCoche = spatial.getControl(RigidBodyControl.class);
-           fisicaCoche.setPhysicsLocation(new Vector3f(0,0,Velocidad()));
+           fisicaCoche.setPhysicsLocation(new Vector3f(0,0,Velocidad()).mult(tpf));
            fisicaCoche.setPhysicsRotation(new Quaternion().fromAngles(0,Rotacion(),0));
        }
         
