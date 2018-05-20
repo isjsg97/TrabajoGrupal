@@ -20,8 +20,10 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     private float tamanoCoche = 2f;
     private float espacioManiobra = 1f;
     
-    Node cocheDelante;
-    Node cocheAtras;
+    Vector3f cocheDelante;
+    Vector3f cocheAtras;
+    
+    Vector3f poscocheia;
     
     float distanciaCocheDelante;
     float distanciaCocheAtras;
@@ -36,40 +38,49 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     
     @Override
     void PreparacionDatos() {
-        distanciaCocheDelante = cocheDelante.getWorldTranslation().distance(agente.Spatial().getWorldTranslation());
-        distanciaCocheAtras = cocheAtras.getWorldTranslation().distance(agente.Spatial().getWorldTranslation());
+        
+        Random ran = new Random();
+        
+        //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
+        float espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2; 
+        
+        cocheDelante = new Vector3f(0,0,espacio/2);
+        cocheAtras = new Vector3f(0,0,-espacio/2);
+        
+        distanciaCocheDelante = cocheDelante.distance(poscocheia);
+        distanciaCocheAtras = cocheAtras.distance(poscocheia);
     }
 
     @Override
     void PreparacionEscenario() {
-        cocheDelante = main.CrearCoche();
-        cocheAtras = main.CrearCoche();
-        
-        Random ran = new Random();
-        
-        float espacio = tamanoCoche + ran.nextFloat() * 2;
-        
-        cocheDelante.setLocalTranslation(Operaciones.SumarVectores(cocheDelante.getWorldTranslation(), new Vector3f(0,0,espacio/2)));
-        cocheAtras.setLocalTranslation(Operaciones.SumarVectores(cocheDelante.getWorldTranslation(), new Vector3f(0,0,-espacio/2)));
 
     }
 
     @Override
     void PreparacionAgente() {
                 
-        Vector3f posicion = Operaciones.SumarVectores(cocheDelante.getWorldTranslation(), cocheAtras.getWorldTranslation()).mult(0.5f);
+        /*Vector3f posicion = Operaciones.SumarVectores(cocheDelante, cocheAtras).mult(0.5f);
         
         posicion = Operaciones.SumarVectores(posicion, new Vector3f(1,0,0));
         
-        agente.Spatial().setLocalTranslation(posicion);
+        agente.Spatial().setLocalTranslation(posicion);*/
+        
+        poscocheia = new Vector3f(1,0,0);
     }
 
     @Override
     boolean EsExito() {
         float distanciaNecesaria = tamanoCoche + espacioManiobra;
-        float distanciaDisponible = cocheDelante.getWorldTranslation().distance(cocheAtras.getWorldTranslation()) - tamanoCoche;
+        float distanciaDisponible = cocheDelante.distance(cocheAtras) - tamanoCoche;
         
         boolean exito = distanciaDisponible >= distanciaNecesaria;
+        
+        
+        
+        System.out.println("DistanciaNecesaria: " + distanciaNecesaria);
+        System.out.println("DistanciaDisponible: " + distanciaDisponible);
+                
+        System.out.println("Exito: " + exito);
         
         return exito;
     }

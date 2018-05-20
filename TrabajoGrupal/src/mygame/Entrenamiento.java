@@ -6,11 +6,14 @@
 package mygame;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import weka.core.Instances;
 import weka.classifiers.Classifier;
+import weka.core.Debug;
 
 /**
  *
@@ -75,18 +78,42 @@ public abstract class Entrenamiento extends Thread{
                 ReCalculo();
             }
         }
+        
+        GuardarFicheroEntrenamiento();
     }
     
     void ObtenerFicheroEntrenamiento(){
         
         try{ 
         
-            String  FicheroCasosEntrenamiento =System.getProperty("user.dir")+"/lanzamientos.arff";
+            String  FicheroCasosEntrenamiento = System.getProperty("user.dir")+"/Aprendizaje/" + tablaAprendizaje +".arff";
             casosEntrenamiento  = new Instances ( new BufferedReader(new FileReader(FicheroCasosEntrenamiento)));
             casosEntrenamiento.setClassIndex(  casosEntrenamiento.numAttributes() - 1 );
         }catch(IOException e){
             System.err.println("Error al abrir la tabla de entrenamiento");
         }
+    }
+    
+    void GuardarFicheroEntrenamiento(){
+        
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(System.getProperty("user.dir")+"/Aprendizaje/" + tablaAprendizaje +".arff"));){
+                  
+        
+            writer.write(casosEntrenamiento.toString());
+            writer.flush();
+            writer.close();
+            
+        }catch(Exception e){
+            System.err.println("Error al abrir la tabla de entrenamiento");
+        }
+        
+ 
+        
+        //System.out.println(casosEntrenamiento.toString());
+        //System.out.println(System.getProperty("user.dir"));
+        
+        //Debug.saveToFile(System.getProperty("user.dir") + "/Aprendizaje/" + "a.dat", conocimiento);
+       
     }
     
 }

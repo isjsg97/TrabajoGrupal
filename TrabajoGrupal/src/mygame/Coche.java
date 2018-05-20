@@ -19,8 +19,6 @@ import com.jme3.scene.Spatial;
 public class Coche extends RigidBodyControl implements PhysicsTickListener, PhysicsCollisionListener{
 
     
-    private float velocidadmax;
-    
     private float rotRuedas;
     private float velocidad;
     private float tiempo;
@@ -29,8 +27,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     private Spatial spatial;
     
-    public Coche(float velmax, Spatial spat){
-        velocidadmax = velmax;
+    public Coche(Spatial spat){
         spatial = spat;
         
         tiempo = 0;

@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
@@ -22,6 +23,11 @@ import weka.classifiers.trees.*;
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
+    
+    
+    private BulletAppState estadosFisicos = new BulletAppState();
+    private RigidBodyControl fisicaCocheIA;
+    
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -31,18 +37,25 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         
+        stateManager.attach(estadosFisicos);
+        
         PonerIluminacion();
         PonerCielo();
         PonerTerreno();
         PonerCamara();
         
-        Node cocheIA = CrearCoche();
+        Node cocheIA = CrearCoche(1);
+        fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
         CocheIA cocheIAScript = CrearCocheIA(cocheIA);
         
-        Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "", 20, ObtenerClasificador());
+        //Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        //entrenamiento.Entrenar();
         
         
-        entrenamiento.Entrenar();
+        
+        Ejecucion ejecucion = new Ejecucion(10, ObtenerClasificador(), "ComprobacionTamano"); 
+        ejecucion.Ejecutar();
+        
         /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
 
@@ -60,11 +73,17 @@ public class Main extends SimpleApplication {
     
     public CocheIA CrearCocheIA(Node coche){
         
+        //Crear Rigidbody
         
-        return null;
+        
+        CocheIA res = new CocheIA(coche);
+        
+        coche.addControl(res);
+        
+        return res;
     }
     
-    public Node CrearCoche(){
+    public Node CrearCoche(float masa){
         
         Node res = new Node();
         
@@ -82,6 +101,15 @@ public class Main extends SimpleApplication {
         buggy.setMaterial(mat);
         //geometrybuggy.setLocalTranslation(0, -1f, 0);
         res.attachChild(buggy);
+        
+        
+        //Crear Rigidbody
+        RigidBodyControl fisica = new RigidBodyControl(masa); //creación la fisicaBola con masa 1 Kg
+        res.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
+        fisica.setRestitution(0.9f);
+        
+        
+        estadosFisicos.getPhysicsSpace().add( fisica );
         
         return res;
     }
