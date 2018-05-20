@@ -8,6 +8,8 @@ package mygame;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
@@ -170,7 +172,17 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         casosEntrenamiento.add(casoAdecidir);
     }
     
+    boolean ProcesoCompletado(){
+        boolean res;
+        
+        res = agente.Tiempo() <= 0 || agente.Colision() != null;
+        
+        return res;
+    }
     
+    int NumeroFases(){
+        return 4;
+    }
     
     //Modificar para este caso, mas adelante unirlo con el de la clase abstracta para que sea general
     @Override
@@ -182,16 +194,38 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
         for(int i = 0; i < iteraciones; i++){
             
-            PreparacionAgente(); 
+            PreparacionAgente();
             PreparacionDatos();
             
+            for(int j = 0; j < NumeroFases(); j++){
+                
+                while(!ProcesoCompletado()){
+                    try {
+                        Thread.sleep(1/5);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                     System.out.println("La hebra ce mamó");
+                    }
+                }
+                
+            }
+            
+
+            
+            
+
+
+                
+                
+                
             if(EsExito()){
                 GuardarExito();
                 PreparacionEscenario();
             }else{
-                GuardarFracaso();
-                ReCalculo();
-            }
+                    GuardarFracaso();
+                    ReCalculo();
+                
+            } 
         }
         
         GuardarFicheroEntrenamiento();
