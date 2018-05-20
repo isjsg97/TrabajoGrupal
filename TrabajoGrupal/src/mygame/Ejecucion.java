@@ -73,7 +73,7 @@ public class Ejecucion extends Thread{
     void ObtenerFicheroEntrenamiento(String file){
         
         try{ 
-        
+            
             String  FicheroCasosEntrenamiento = System.getProperty("user.dir")+"/Aprendizaje/" + file +".arff";
             casosEntrenamiento  = new Instances ( new BufferedReader(new FileReader(FicheroCasosEntrenamiento)));
             casosEntrenamiento.setClassIndex(  casosEntrenamiento.numAttributes() - 1 );
