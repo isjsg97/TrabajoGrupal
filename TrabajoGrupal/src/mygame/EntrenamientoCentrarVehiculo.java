@@ -113,5 +113,10 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     boolean FaseExito() {
         return true;
     }
+
+    @Override
+    void PreparacionFase() {
+        
+    }
     
 }
