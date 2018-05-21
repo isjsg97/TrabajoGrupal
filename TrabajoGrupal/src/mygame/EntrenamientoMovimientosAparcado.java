@@ -201,4 +201,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         return res;
     }
     
+    @Override
+    void PreparacionFase() {
+        
+    }
 }

@@ -48,6 +48,8 @@ public abstract class Entrenamiento extends Thread{
     
     abstract void PreparacionAgente();  
     
+    abstract void PreparacionFase();
+    
     abstract void PreparacionDatos();
     
     abstract void Planificacion();
@@ -70,6 +72,9 @@ public abstract class Entrenamiento extends Thread{
         start();
     }
     
+    
+    //Preguntar A Profesor sobre Recalculo (usar for o simular for) y si es mejor hacer esta funcion independiente del aprendizaje
+    
     @Override
     public void run(){
         
@@ -86,7 +91,9 @@ public abstract class Entrenamiento extends Thread{
             PreparacionDatos();
   
             for(fase = 0; fase < NumeroFases(); fase++){
-
+                
+                PreparacionFase();
+                
                 Planificacion();
                 
                 while(!FaseCompletada()){
@@ -99,7 +106,7 @@ public abstract class Entrenamiento extends Thread{
                 }           
                 
                 if(!FaseExito()){
-                    break;
+                    ReCalculo();
                 }
                 
             }
@@ -109,7 +116,7 @@ public abstract class Entrenamiento extends Thread{
            
             }else{
                 GuardarFracaso();
-                ReCalculo();
+                
                 
             }
   
