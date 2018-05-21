@@ -37,14 +37,14 @@ public class  Operaciones {
         return res;
     }
     
-    public static Vector3f RotarVectorZ(Vector3f vector, float angulo){
+    public static Vector3f RotarVectorY(Vector3f vector, float angulo){
         Vector3f res = new Vector3f(0,0,0);
         
         float rad = DegtoRad(angulo);
         
-        res.x = vector.x * (float)Math.cos(rad) - vector.y * (float)Math.sin(rad);
-        res.y = vector.x * (float)Math.sin(rad) + vector.y * (float)Math.cos(rad);
-        res.z = vector.z;
+        res.x = vector.x * (float)Math.cos(rad) - vector.z * (float)Math.sin(rad);
+        res.z = vector.x * (float)Math.sin(rad) + vector.z * (float)Math.cos(rad);
+        res.y = vector.y;
         //y' = x sin Î¸ + y cos Î¸
         
         return res;

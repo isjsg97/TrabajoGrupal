@@ -96,13 +96,28 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     void Avanzar(float tpf){
         
-       RigidBodyControl fisicaCoche;
+       RigidBodyControl fisicaCoche = this; 
+         
+        Vector3f mivel = new Vector3f(0,0,velocidad);
+        float[] ang = new float[3];
+        float roty = spatial.getWorldRotation().toAngles(ang)[1];
         
-       if (velocidad!=0) {
-           fisicaCoche = spatial.getControl(RigidBodyControl.class);
-           fisicaCoche.setPhysicsLocation(new Vector3f(0,0,Velocidad()).mult(tpf));
-           fisicaCoche.setPhysicsRotation(new Quaternion().fromAngles(0,Rotacion(),0));
-       }
+        System.out.println("Rot y: " + roty);
+        System.out.println("Rot y quaternion: " + spatial.getWorldRotation());
+        
+        mivel = Operaciones.RotarVectorY(mivel, Operaciones.RadtoDeg(-roty));
+        
+        fisicaCoche.setPhysicsLocation(Operaciones.SumarVectores(fisicaCoche.getPhysicsLocation(), mivel.mult(tpf)));
+        
+        float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(30)) * tpf / 10;
+        spatial.rotate(0, rotacion, 0);
+        
+        Quaternion rotCoche = fisicaCoche.getPhysicsRotation();
+        
+        float [] rotCocheArray = new float[3];
+        
+        rotCocheArray = rotCoche.toAngles(rotCocheArray);       
+        fisicaCoche.setPhysicsRotation(new Quaternion().fromAngles(0,rotCocheArray[1]+rotacion,0));
         
     }
     
