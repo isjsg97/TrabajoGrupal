@@ -45,15 +45,15 @@ public class Main extends SimpleApplication {
         PonerCamara();
         
         Node cocheIA = CrearCoche(true);
-        fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
+        //fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
         CocheIA cocheIAScript = CrearCocheIA(cocheIA);
         
-        //Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
-        //entrenamiento.Entrenar();
+        Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        entrenamiento.Entrenar();
         
         
         
-        Ejecucion ejecucion = new Ejecucion(10, ObtenerClasificador(), "ComprobacionTamano"); 
+        /*Ejecucion ejecucion = new Ejecucion(10, ObtenerClasificador(), "ComprobacionTamano"); 
         ejecucion.Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -77,7 +77,7 @@ public class Main extends SimpleApplication {
         
         
         CocheIA res = new CocheIA(1, coche);
-        estadosFisicos.getPhysicsSpace().add(res);
+        estadosFisicos.getPhysicsSpace().addCollisionListener(res);
         coche.addControl(res);
         
         return res;
@@ -103,7 +103,7 @@ public class Main extends SimpleApplication {
         res.attachChild(buggy);
         
         
-        if(esIA){
+        if(!esIA){
         
             //Crear Rigidbody
             RigidBodyControl fisica = new RigidBodyControl(0); //creación la fisicaBola con masa 1 Kg

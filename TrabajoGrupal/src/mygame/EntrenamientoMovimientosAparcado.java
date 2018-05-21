@@ -172,7 +172,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         casosEntrenamiento.add(casoAdecidir);
     }
     
-    boolean ProcesoCompletado(){
+    @Override
+    boolean FaseCompletada(){
         boolean res;
         
         res = agente.Tiempo() <= 0 || agente.Colision() != null;
@@ -180,54 +181,24 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         return res;
     }
     
+    @Override
     int NumeroFases(){
         return 4;
     }
     
-    //Modificar para este caso, mas adelante unirlo con el de la clase abstracta para que sea general
+
     @Override
-    public void run(){
+    void Planificacion() {
         
-        ObtenerFicheroEntrenamiento();
-        
-        PreparacionEscenario();
-        
-        for(int i = 0; i < iteraciones; i++){
-            
-            PreparacionAgente();
-            PreparacionDatos();
-            
-            for(int j = 0; j < NumeroFases(); j++){
-                
-                while(!ProcesoCompletado()){
-                    try {
-                        Thread.sleep(1/5);
-                    }catch (InterruptedException ex) {
-                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
-                     System.out.println("La hebra ce mamó");
-                    }
-                }
-                
-            }
-            
-
-            
-            
-
-
-                
-                
-                
-            if(EsExito()){
-                GuardarExito();
-                PreparacionEscenario();
-            }else{
-                    GuardarFracaso();
-                    ReCalculo();
-                
-            } 
-        }
-        
-        GuardarFicheroEntrenamiento();
     }
+
+    @Override
+    boolean FaseExito() {
+        boolean res;
+        
+        res = agente.Tiempo() <= 0 && agente.Colision() == null;
+        
+        return res;
+    }
+    
 }

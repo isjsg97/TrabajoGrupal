@@ -19,6 +19,6 @@
 @attribute angulo4 numeric
 @attribute tiempo4 numeric
 
-@attribute movimientoscorrectos {si, no}
+@attribute movimientoscorrectos numeric
 
 @data

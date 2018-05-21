@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.core.Instances;
 import weka.classifiers.Classifier;
 import weka.core.Debug;
@@ -29,6 +31,8 @@ public abstract class Entrenamiento extends Thread{
     Instances  casosEntrenamiento;
     Classifier conocimiento;
     
+    int fase;
+    
     public Entrenamiento(CocheIA ag, Main m, String ta, int it, Classifier cono){
         agente = ag;
         main = m;
@@ -46,6 +50,8 @@ public abstract class Entrenamiento extends Thread{
     
     abstract void PreparacionDatos();
     
+    abstract void Planificacion();
+    
     abstract boolean EsExito();
     
     abstract void ReCalculo();
@@ -53,6 +59,12 @@ public abstract class Entrenamiento extends Thread{
     abstract void GuardarExito();
     
     abstract void GuardarFracaso();
+    
+    abstract int NumeroFases();
+    
+    abstract boolean FaseCompletada();
+    
+    abstract boolean FaseExito();
     
     public void Entrenar(){
         start();
@@ -63,20 +75,44 @@ public abstract class Entrenamiento extends Thread{
         
         ObtenerFicheroEntrenamiento();
         
-        PreparacionEscenario();
+        
         
         for(int i = 0; i < iteraciones; i++){
             
-            PreparacionAgente(); 
-            PreparacionDatos();
+            PreparacionEscenario();
             
-            if(EsExito()){
-                GuardarExito();
-                PreparacionEscenario();
+            PreparacionAgente();
+            
+            PreparacionDatos();
+  
+            for(fase = 0; fase < NumeroFases(); fase++){
+
+                Planificacion();
+                
+                while(!FaseCompletada()){
+                    try {
+                        Thread.sleep(1/5);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                     System.out.println("La hebra ce mamó");
+                    }
+                }           
+                
+                if(!FaseExito()){
+                    break;
+                }
+                
+            }
+            
+            if(EsExito() && fase == NumeroFases()){
+                    GuardarExito();
+           
             }else{
                 GuardarFracaso();
                 ReCalculo();
+                
             }
+  
         }
         
         GuardarFicheroEntrenamiento();

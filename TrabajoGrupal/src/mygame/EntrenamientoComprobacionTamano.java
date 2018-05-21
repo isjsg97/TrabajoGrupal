@@ -109,5 +109,25 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     void ReCalculo() {
        
     }
+
+    @Override
+    void Planificacion() {
+        
+    }
+
+    @Override
+    int NumeroFases() {
+        return 1;
+    }
+
+    @Override
+    boolean FaseCompletada() {
+        return true;
+    }
+
+    @Override
+    boolean FaseExito() {
+        return true;
+    }
     
 }
