@@ -129,5 +129,10 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     boolean FaseExito() {
         return true;
     }
+
+    @Override
+    void PreparacionFase() {
+        
+    }
     
 }
