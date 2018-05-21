@@ -20,8 +20,8 @@ import com.jme3.scene.Spatial;
  */
 public class CocheIA extends Coche{
 
-    public CocheIA(Spatial spat) {
-        super(spat);
+    public CocheIA(float masa, Spatial spat) {
+        super(masa,spat);
     }
 
 }

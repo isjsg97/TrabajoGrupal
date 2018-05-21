@@ -44,7 +44,7 @@ public class Main extends SimpleApplication {
         PonerTerreno();
         PonerCamara();
         
-        Node cocheIA = CrearCoche(1);
+        Node cocheIA = CrearCoche(true);
         fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
         CocheIA cocheIAScript = CrearCocheIA(cocheIA);
         
@@ -76,14 +76,14 @@ public class Main extends SimpleApplication {
         //Crear Rigidbody
         
         
-        CocheIA res = new CocheIA(coche);
-        
+        CocheIA res = new CocheIA(1, coche);
+        estadosFisicos.getPhysicsSpace().add(res);
         coche.addControl(res);
         
         return res;
     }
     
-    public Node CrearCoche(float masa){
+    public Node CrearCoche(boolean esIA){
         
         Node res = new Node();
         
@@ -103,13 +103,15 @@ public class Main extends SimpleApplication {
         res.attachChild(buggy);
         
         
-        //Crear Rigidbody
-        RigidBodyControl fisica = new RigidBodyControl(masa); //creación la fisicaBola con masa 1 Kg
-        res.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
-        fisica.setRestitution(0.9f);
+        if(esIA){
         
-        
-        estadosFisicos.getPhysicsSpace().add( fisica );
+            //Crear Rigidbody
+            RigidBodyControl fisica = new RigidBodyControl(0); //creación la fisicaBola con masa 1 Kg
+            res.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
+            fisica.setRestitution(0.9f);
+            res.addControl(fisica);
+            estadosFisicos.getPhysicsSpace().add( fisica );
+        }
         
         return res;
     }

@@ -29,7 +29,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     private Spatial spatial;
     
-    public Coche(Spatial spat){
+    public Coche(float masa, Spatial spat){
+        super(masa);
         spatial = spat;
         
         tiempo = 0;

@@ -56,8 +56,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     @Override
     void PreparacionEscenario() {
         
-        cocheDelante = main.CrearCoche(0);
-        cocheAtras = main.CrearCoche(0);
+        cocheDelante = main.CrearCoche(false);
+        cocheAtras = main.CrearCoche(false);
         
         Random ran = new Random();
         
