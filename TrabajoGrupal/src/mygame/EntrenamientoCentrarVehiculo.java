@@ -27,8 +27,21 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     float distanciaCocheDelante;
     float distanciaCocheAtras;
     
+    float velocidad1;
+    float angulo1;
+    float tiempo1;
+    
+    float velocidad2;
+    float angulo2;
+    float tiempo2;
+    
+    float espacio;
+    
     public EntrenamientoCentrarVehiculo(CocheIA ag, Main m, String ta, int it, Classifier cono) {
         super(ag, m, ta, it, cono);
+        
+        Random ran = new Random();
+        espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2;
     }
     
     @Override
@@ -37,10 +50,7 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     }
 
     @Override
-    void PreparacionAgente() {
-        
-        Random ran = new Random();    
-        float espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2;
+    void PreparacionAgente() {  
         
         //Posicion CocheIA
         Random ran2 = new Random();       
@@ -52,10 +62,6 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
 
     @Override
     void PreparacionDatos() {
-        Random ran = new Random();
-        
-        //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
-        float espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2; 
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);
@@ -75,7 +81,13 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
         casoAdecidir.setDataset(casosEntrenamiento);   
         casoAdecidir.setValue(0, distanciaCocheDelante);
         casoAdecidir.setValue(1, distanciaCocheAtras);
-        casoAdecidir.setValue(2, 1);         
+        casoAdecidir.setValue(2, velocidad1);
+        casoAdecidir.setValue(3, angulo1);
+        casoAdecidir.setValue(4, tiempo1);
+        casoAdecidir.setValue(5, velocidad2);
+        casoAdecidir.setValue(6, angulo2);
+        casoAdecidir.setValue(7, tiempo2);
+        casoAdecidir.setValue(8, 1);       
         casosEntrenamiento.add(casoAdecidir);
     }
 
@@ -85,7 +97,12 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
         casoAdecidir.setDataset(casosEntrenamiento);   
         casoAdecidir.setValue(0, distanciaCocheDelante);
         casoAdecidir.setValue(1, distanciaCocheAtras);
-        casoAdecidir.setValue(2, 0);         
+        casoAdecidir.setValue(3, angulo1);
+        casoAdecidir.setValue(4, tiempo1);
+        casoAdecidir.setValue(5, velocidad2);
+        casoAdecidir.setValue(6, angulo2);
+        casoAdecidir.setValue(7, tiempo2);
+        casoAdecidir.setValue(8, 0);        
         casosEntrenamiento.add(casoAdecidir);
     }
 
@@ -101,7 +118,7 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     
     @Override
     int NumeroFases() {
-        return 5;
+        return 1;
     }
 
     @Override
