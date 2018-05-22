@@ -49,7 +49,7 @@ public class Main extends SimpleApplication {
         CocheIA cocheIAScript = CrearCocheIA(cocheIA);
         
         /*Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
-        entrenamiento.Entrenar();
+        entrenamiento.Entrenar();*/
         
         /**/
         

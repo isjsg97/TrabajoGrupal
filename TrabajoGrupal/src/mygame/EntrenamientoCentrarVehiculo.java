@@ -17,7 +17,8 @@ import weka.core.Instance;
 public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     
     
-    private float tamanoCoche = 2f;
+    float tamanoCoche = 2f;
+    float espacioManiobra = 1f;
     
     Vector3f poscocheia;
     
@@ -27,13 +28,11 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     float distanciaCocheDelante;
     float distanciaCocheAtras;
     
-    float velocidad1;
-    float angulo1;
-    float tiempo1;
+    float velocidad = 20;
+    float angulo = 0;
     
-    float velocidad2;
-    float angulo2;
-    float tiempo2;
+    float tiempo;
+
     
     float espacio;
     
@@ -61,79 +60,60 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     void PreparacionDatos() {
         
         Random ran = new Random();
-        espacio = tamanoCoche  * 2 + (ran.nextFloat() * 2)+ 1; //comprobar que sea mayor que distancia maniobra
+        espacio = tamanoCoche  * 2 + (ran.nextFloat() * 2)+ espacioManiobra; //comprobar que sea mayor que espacio necesario
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);
         
         distanciaCocheDelante = cocheDelante.distance(poscocheia);
         distanciaCocheAtras = cocheAtras.distance(poscocheia);
+        
+        Vector3f posfinal = Operaciones.SumarVectores(cocheAtras, cocheDelante).mult(0.5f);
+        //Vector3f poscoche = agente.Spatial().getWorldTranslation();
+        
+        float poszcoche = -espacio/2 + tamanoCoche + ran.nextFloat() * 2;
+        Vector3f poscoche = Operaciones.SumarVectores(cocheAtras, new Vector3f(0,0, poszcoche));
+        
+        float distancia = posfinal.distance(poscoche);
+        
+        tiempo = distancia / velocidad;
+        
     }
 
+    //Es Regresion esto no se usa
     @Override
     boolean EsExito() {
         return cocheDelante.distance(poscocheia) == cocheAtras.distance(poscocheia);
     }
 
+    
+
     @Override
-    void GuardarExito() {
+    void Guardar() {
         Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
         casoAdecidir.setDataset(casosEntrenamiento);   
         casoAdecidir.setValue(0, distanciaCocheDelante);
         casoAdecidir.setValue(1, distanciaCocheAtras);
-        casoAdecidir.setValue(2, velocidad1);
-        casoAdecidir.setValue(3, angulo1);
-        casoAdecidir.setValue(4, tiempo1);
-        casoAdecidir.setValue(5, velocidad2);
-        casoAdecidir.setValue(6, angulo2);
-        casoAdecidir.setValue(7, tiempo2);
-        casoAdecidir.setValue(8, 1);       
+        casoAdecidir.setValue(2, velocidad);
+        casoAdecidir.setValue(3, angulo);
+        casoAdecidir.setValue(4, tiempo);       
         casosEntrenamiento.add(casoAdecidir);
     }
 
-    @Override
-    void GuardarFracaso() {
-        Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
-        casoAdecidir.setDataset(casosEntrenamiento);   
-        casoAdecidir.setValue(0, distanciaCocheDelante);
-        casoAdecidir.setValue(1, distanciaCocheAtras);
-        casoAdecidir.setValue(3, angulo1);
-        casoAdecidir.setValue(4, tiempo1);
-        casoAdecidir.setValue(5, velocidad2);
-        casoAdecidir.setValue(6, angulo2);
-        casoAdecidir.setValue(7, tiempo2);
-        casoAdecidir.setValue(8, 0);        
-        casosEntrenamiento.add(casoAdecidir);
-    }
 
     @Override
-    void Planificacion() {
-        
-    }
-    
-    @Override
-    void ReCalculo() {
-        
-    }
-    
-    @Override
-    int NumeroFases() {
-        return 1;
-    }
-
-    @Override
-    boolean FaseCompletada() {
-        return true;
-    }
-
-    @Override
-    boolean FaseExito() {
-        return true;
-    }
-
-    @Override
-    void PreparacionFase() {
-        
+    void Entrenamiento() {
+        for(int i = 0; i < iteraciones; i++){
+            
+            PreparacionEscenario();
+            
+            PreparacionAgente();
+            
+            PreparacionDatos();
+            
+            Guardar();
+  
+        }
     }
     
 }

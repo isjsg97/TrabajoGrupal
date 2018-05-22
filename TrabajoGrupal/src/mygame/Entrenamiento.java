@@ -48,30 +48,17 @@ public abstract class Entrenamiento extends Thread{
     
     abstract void PreparacionAgente();  
     
-    abstract void PreparacionFase();
-    
-    abstract void PreparacionDatos();
-    
-    abstract void Planificacion();
+    abstract void PreparacionDatos();  
     
     abstract boolean EsExito();
     
-    abstract void ReCalculo();
-    
-    abstract void GuardarExito();
-    
-    abstract void GuardarFracaso();
-    
-    abstract int NumeroFases();
-    
-    abstract boolean FaseCompletada();
-    
-    abstract boolean FaseExito();
+    abstract void Guardar();
     
     public void Entrenar(){
         start();
     }
     
+    abstract void Entrenamiento();
     
     //Preguntar A Profesor sobre Recalculo (usar for o simular for) y si es mejor hacer esta funcion independiente del aprendizaje
     
@@ -81,46 +68,8 @@ public abstract class Entrenamiento extends Thread{
         ObtenerFicheroEntrenamiento();
         
         
+        Entrenamiento();
         
-        for(int i = 0; i < iteraciones; i++){
-            
-            PreparacionEscenario();
-            
-            PreparacionAgente();
-            
-            PreparacionDatos();
-  
-            for(fase = 0; fase < NumeroFases(); fase++){
-                
-                PreparacionFase();
-                
-                Planificacion();
-                
-                while(!FaseCompletada()){
-                    try {
-                        Thread.sleep(1/5);
-                    }catch (InterruptedException ex) {
-                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
-                        System.out.println("La hebra ce mamó");
-                    }
-                }           
-                
-                if(!FaseExito()){
-                    ReCalculo();
-                }
-                
-            }
-            
-            if(EsExito() && fase == NumeroFases()){
-                    GuardarExito();
-           
-            }else{
-                GuardarFracaso();
-                
-                
-            }
-  
-        }
         
         GuardarFicheroEntrenamiento();
     }

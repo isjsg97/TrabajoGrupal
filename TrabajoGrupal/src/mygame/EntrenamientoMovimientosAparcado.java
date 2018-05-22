@@ -91,12 +91,12 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         return res;
     }
 
-    @Override
+    
     void ReCalculo() {
         
     }
 
-    @Override
+    
     void GuardarExito() {
         
         Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
@@ -135,7 +135,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
     }
 
-    @Override
+   
     void GuardarFracaso() {
         Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
         casoAdecidir.setDataset(casosEntrenamiento);
@@ -172,7 +172,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         casosEntrenamiento.add(casoAdecidir);
     }
     
-    @Override
+    
     boolean FaseCompletada(){
         boolean res;
         
@@ -181,18 +181,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         return res;
     }
     
-    @Override
-    int NumeroFases(){
-        return 4;
-    }
+    
+    
     
 
-    @Override
+    
     void Planificacion() {
         
     }
 
-    @Override
+    
     boolean FaseExito() {
         boolean res;
         
@@ -201,8 +199,18 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         return res;
     }
     
-    @Override
+    
     void PreparacionFase() {
+        
+    }
+
+    @Override
+    void Guardar() {
+        
+    }
+
+    @Override
+    void Entrenamiento() {
         
     }
 }
