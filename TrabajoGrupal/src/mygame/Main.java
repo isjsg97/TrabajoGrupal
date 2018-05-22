@@ -48,12 +48,12 @@ public class Main extends SimpleApplication {
         //fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
         CocheIA cocheIAScript = CrearCocheIA(cocheIA);
         
-        Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        /*Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
         entrenamiento.Entrenar();
         
+        /**/
         
-        
-        /*Ejecucion ejecucion = new Ejecucion(10, ObtenerClasificador(), "ComprobacionTamano"); 
+        EjecucionAntiguo ejecucion = new EjecucionAntiguo(10, ObtenerClasificador(), "ComprobacionTamano"); 
         ejecucion.Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -120,7 +120,7 @@ public class Main extends SimpleApplication {
     public Classifier ObtenerClasificador(){
         Classifier res; 
         
-        //res = new M5P();
+        //res = new M5P(); //Con este no va bien
         res = new MultilayerPerceptron();
         
         return res;

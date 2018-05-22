@@ -101,7 +101,7 @@ public abstract class Entrenamiento extends Thread{
                         Thread.sleep(1/5);
                     }catch (InterruptedException ex) {
                         Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
-                     System.out.println("La hebra ce mamó");
+                        System.out.println("La hebra ce mamó");
                     }
                 }           
                 

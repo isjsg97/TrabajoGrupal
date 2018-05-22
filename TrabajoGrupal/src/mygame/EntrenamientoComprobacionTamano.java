@@ -70,8 +70,8 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
 
     @Override
     boolean EsExito() {
-        float distanciaNecesaria = tamanoCoche + espacioManiobra;
-        float distanciaDisponible = cocheDelante.distance(cocheAtras) - tamanoCoche;
+        float distanciaNecesaria = tamanoCoche * 2 + espacioManiobra;
+        float distanciaDisponible = cocheDelante.distance(cocheAtras);
         
         boolean exito = distanciaDisponible >= distanciaNecesaria;
         

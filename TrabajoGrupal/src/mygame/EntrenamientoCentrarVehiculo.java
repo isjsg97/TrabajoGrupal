@@ -61,7 +61,7 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     void PreparacionDatos() {
         
         Random ran = new Random();
-        espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2; //comprobar que sea mayor que distancia maniobra
+        espacio = tamanoCoche  * 2 + (ran.nextFloat() * 2)+ 1; //comprobar que sea mayor que distancia maniobra
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);

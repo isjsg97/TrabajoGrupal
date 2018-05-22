@@ -9,8 +9,6 @@ import com.jme3.math.Vector3f;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +20,7 @@ import weka.core.Instances;
  *
  * @author Jose Santos
  */
-public class Ejecucion extends Thread{
+public class EjecucionAntiguo extends Thread{
     
     CocheIA cocheIA;
     
@@ -31,24 +29,18 @@ public class Ejecucion extends Thread{
     private float espacioManiobra = 1f;
     
     
-    
+    Instances casosEntrenamiento;
     Classifier conocimiento;
     
     String tablaComprobacionTamano;
     
     Vector3f poscoche = new Vector3f(1,0,0);
     
-    
-    FaseEjecucion[] fasesEjecucion;
-    String[] tablas;
-    
-    public Ejecucion(int numc, Classifier cono, FaseEjecucion[] fases, String[] tabs){
+    public EjecucionAntiguo(int numc, Classifier cono, String tct){
         coches = new Vector3f[numc];
         
         conocimiento = cono;
-        
-        fasesEjecucion = fases;
-        tablas = tabs;
+        tablaComprobacionTamano = tct;
     }
     
     
@@ -78,9 +70,10 @@ public class Ejecucion extends Thread{
         coches[coches.length - 1] = pos.clone();
     }
     
-    Instances ObtenerFicheroEntrenamiento(String file){
+    void ObtenerFicheroEntrenamiento(String file){
         
-        Instances casosEntrenamiento = null;
+        /*System.out.println("Obtener Fichero :" + conocimiento);
+        System.out.println(conocimiento == null);*/
         
         try{ 
             
@@ -92,12 +85,11 @@ public class Ejecucion extends Thread{
         }catch(IOException e){
             System.err.println("Error al abrir la tabla de entrenamiento");
         } catch (Exception ex) {
-            Logger.getLogger(Ejecucion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EjecucionAntiguo.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return casosEntrenamiento;
+        
     }
-    
     
     public void Ejecutar(){
         start();
@@ -106,40 +98,61 @@ public class Ejecucion extends Thread{
     @Override
     public void run(){
         
+        ObtenerFicheroEntrenamiento(tablaComprobacionTamano);
+        
         ConseguirListaCoches();
         
-        
-        for(int i = 0; i < fasesEjecucion.length; i++){
+        Vector3f delante;
+        Vector3f atras = coches[0];
+        for(int i = 1; i < coches.length; i++){
             
-            String tabla = tablas[i];
-            FaseEjecucion fase = fasesEjecucion[i];
-            Instances casosEntrenamiento = ObtenerFicheroEntrenamiento(tabla);
+            delante = coches[i];
             
-            if(i == 0){
-                
-                fase.PrepararEjecucion(cocheIA, conocimiento, casosEntrenamiento, coches);
-                
+            poscoche = Operaciones.SumarVectores(atras, Operaciones.RestarVectores(delante, atras).mult(0.5f));
+            poscoche.x = 1;
+            
+            System.out.println("Posicion coche: " + poscoche);
+            
+            if(EsTamanoCorrecto(delante, atras)){
+                System.out.println("Distancia: " + delante.distance(atras) + " resultado es: " + true);
             }else{
-                
-                fase.PrepararEjecucion(cocheIA, conocimiento, casosEntrenamiento);
-                
+                System.out.println("Distancia: " + delante.distance(atras) + " resultado es: " + false);
             }
             
-            fase.Ejecutar();
-            
-            while(!fase.FaseCompletada()){
-                try {
-                    Thread.sleep(1/5);
-                }catch (InterruptedException ex) {
-                    Logger.getLogger(Ejecucion.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println("La hebra ce mamó");
-                }
-            }
+            atras = delante;
         }
         
         
     }
     
     
-    
+    boolean EsTamanoCorrecto(Vector3f ddelante, Vector3f datras){
+        int res = 0;
+        
+        float distdelante = poscoche.distance(ddelante);
+        float distatras = poscoche.distance(datras);
+        
+        System.out.println("PoscionDelante: " + ddelante + ", PosicionAtras: " + datras);
+        
+        System.out.println("DistanciaDelante: " + distdelante + ", DistanciaAtras: " + distatras);
+ 
+        //System.out.println(conocimiento);
+        
+        try {
+            Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
+            casoAdecidir.setDataset(casosEntrenamiento);   
+            casoAdecidir.setValue(0,  distdelante);
+            casoAdecidir.setValue(1,  distatras);  //alcanzara disntancia de 2.5 deberia dar v=5   */
+            
+            //casoAdecidir.setValue(0,  3.147669f);
+            //casoAdecidir.setValue(1,  3.147669f);
+            res = (int) conocimiento.classifyInstance(casoAdecidir);
+            
+            System.out.println("Resultado: " + res);
+        } catch (Exception ex) {
+            Logger.getLogger(EjecucionAntiguo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return res == 1;
+    }
 }
