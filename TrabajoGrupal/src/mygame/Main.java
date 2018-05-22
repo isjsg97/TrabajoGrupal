@@ -174,10 +174,11 @@ public class Main extends SimpleApplication {
         this.setDisplayFps(false);
     }
     
-   /* public static void Destruir(Spatial nodo){
+   public static void Destruir(Spatial nodo){
         nodo.removeFromParent();
     }
     
+   /*
     public static void Crear(Spatial nodo){
         rootNodeaux.attachChild(nodo);
     }*/
