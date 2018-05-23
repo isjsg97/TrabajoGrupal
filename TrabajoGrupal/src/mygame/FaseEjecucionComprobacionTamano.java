@@ -47,7 +47,7 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
     }
 
     @Override
-    public void run() {
+    public void Ejecucion() {
         
         Vector3f delante;
         Vector3f atras = coches[0];
@@ -116,6 +116,12 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
         
         
         System.out.println("Posicion coche: " + pos);
+    }
+    
+    void PonerDatosCoche(){
+        agente.Velocidad(velocidad);
+        agente.Rotacion(angulo);
+        agente.Tiempo(tiempo);
     }
     
 }

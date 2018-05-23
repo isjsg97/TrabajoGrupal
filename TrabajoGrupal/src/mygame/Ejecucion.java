@@ -42,13 +42,17 @@ public class Ejecucion extends Thread{
     FaseEjecucion[] fasesEjecucion;
     String[] tablas;
     
-    public Ejecucion(int numc, Classifier cono, FaseEjecucion[] fases, String[] tabs){
+    Main main;
+    
+    public Ejecucion(int numc, Main m, Classifier cono, FaseEjecucion[] fases, String[] tabs){
         coches = new Vector3f[numc];
         
         conocimiento = cono;
         
         fasesEjecucion = fases;
         tablas = tabs;
+        
+        main = m;
     }
     
     
@@ -67,6 +71,8 @@ public class Ejecucion extends Thread{
             pos = Operaciones.SumarVectores(pos, vdespl);
             
             coches[i] = pos.clone();
+            
+            main.CrearCoche(false, pos);
         }
         
         float despl = tamanoCoche * 2 + espacioManiobra + 1;
@@ -76,6 +82,8 @@ public class Ejecucion extends Thread{
         pos = Operaciones.SumarVectores(pos, vdespl);
             
         coches[coches.length - 1] = pos.clone();
+        
+        main.CrearCoche(false, pos);
     }
     
     Instances ObtenerFicheroEntrenamiento(String file){
@@ -108,6 +116,8 @@ public class Ejecucion extends Thread{
         
         ConseguirListaCoches();
         
+        
+        cocheIA = main.CrearCocheIA(new Vector3f(1,0,0));
         
         for(int i = 0; i < fasesEjecucion.length; i++){
             

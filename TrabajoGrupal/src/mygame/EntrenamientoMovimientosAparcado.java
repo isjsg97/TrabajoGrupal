@@ -56,16 +56,15 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     @Override
     void PreparacionEscenario() {
         
-        cocheDelante = main.CrearCoche(false);
-        cocheAtras = main.CrearCoche(false);
+        
         
         Random ran = new Random();
         
         //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
         float espacio = tamanoCoche  * 2  + 1 + ran.nextFloat() * 2; 
         
-        cocheDelante.setLocalTranslation(new Vector3f(0,0,espacio/2));
-        cocheAtras.setLocalTranslation(new Vector3f(0,0,-espacio/2));
+        cocheDelante = main.CrearCoche(false, new Vector3f(0,0,espacio/2));
+        cocheAtras = main.CrearCoche(false, new Vector3f(0,0,-espacio/2));
     }
 
     @Override

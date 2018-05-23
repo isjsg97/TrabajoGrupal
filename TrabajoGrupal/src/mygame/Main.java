@@ -13,6 +13,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.ArrayList;
+import java.util.List;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.*;
@@ -44,17 +46,16 @@ public class Main extends SimpleApplication {
         PonerTerreno();
         PonerCamara();
         
-        Node cocheIA = CrearCoche(true);
+      
         //fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
-        CocheIA cocheIAScript = CrearCocheIA(cocheIA);
+        //CocheIA cocheIAScript = CrearCocheIA(new Vector3f(1,0,0));
         
         /*Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
         entrenamiento.Entrenar();*/
         
         /**/
         
-        EjecucionAntiguo ejecucion = new EjecucionAntiguo(10, ObtenerClasificador(), "ComprobacionTamano"); 
-        ejecucion.Ejecutar();
+        Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
@@ -71,10 +72,11 @@ public class Main extends SimpleApplication {
     }
     
     
-    public CocheIA CrearCocheIA(Node coche){
+    public CocheIA CrearCocheIA(Vector3f pos){
         
         //Crear Rigidbody
         
+        Node coche = CrearCoche(true, pos);
         
         CocheIA res = new CocheIA(1, coche);
         estadosFisicos.getPhysicsSpace().addCollisionListener(res);
@@ -83,7 +85,7 @@ public class Main extends SimpleApplication {
         return res;
     }
     
-    public Node CrearCoche(boolean esIA){
+    public Node CrearCoche(boolean esIA, Vector3f pos){
         
         Node res = new Node();
         
@@ -103,6 +105,8 @@ public class Main extends SimpleApplication {
         res.attachChild(buggy);
         
         
+        res.setLocalTranslation(pos);
+        
         if(!esIA){
         
             //Crear Rigidbody
@@ -116,6 +120,35 @@ public class Main extends SimpleApplication {
         return res;
     }
     
+    void Ejecutar(){
+        
+        List<FaseEjecucion> fases = new ArrayList<>();
+        fases.add(new FaseEjecucionComprobacionTamano());
+        
+        
+        //FaseEjecucion[] fasearray = (FaseEjecucion[]) fases.toArray();
+        FaseEjecucion[] fasearray = new FaseEjecucion[fases.size()];
+        fasearray = fases.toArray(fasearray);
+        /*//List to Array
+        int i = 0;
+        for(FaseEjecucion f : fases){
+            fasearray[i] = f;
+            i++;
+        }*/
+        
+        
+        List<String> tablas = new ArrayList<>();
+        tablas.add("ComprobacionTamano");
+        
+        
+        String[] tablasarray = new String[tablas.size()];
+        tablasarray = tablas.toArray(tablasarray);
+        
+        Ejecucion ejecucion = new Ejecucion(10, this, ObtenerClasificador(), fasearray, tablasarray);
+        //EjecucionAntiguo ejecucion = new EjecucionAntiguo(10, ObtenerClasificador(), "ComprobacionTamano"); 
+       
+        ejecucion.Ejecutar();
+    }
     
     public Classifier ObtenerClasificador(){
         Classifier res; 

@@ -30,13 +30,20 @@ public abstract class FaseEjecucion extends Thread{
         conocimiento = (Classifier) params[1];
     }
     
-    public abstract void Ejecutar();
     
     public abstract boolean FaseCompletada();
     
     //GetDatos
     
+    public void Ejecutar(){
+        start();
+    }
+    
+    abstract void Ejecucion();
+    
     @Override
-    public abstract void run();
+    public void run(){
+        Ejecucion();
+    }
     
 }
