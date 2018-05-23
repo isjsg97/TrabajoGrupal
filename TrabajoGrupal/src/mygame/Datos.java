@@ -16,6 +16,7 @@ public class Datos {
     public static float tamanoCoche = 2;
     public static float espacioManiobra = 1;
     public static float offsetPocAgenteX = 1.5f;
+    public static int tiempoEsperaThread = 1000 / 4;
     
     public static Vector3f PosInicial(){
         return new Vector3f(offsetPocAgenteX,0,0);

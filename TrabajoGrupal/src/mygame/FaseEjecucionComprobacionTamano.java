@@ -67,7 +67,7 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             while(agente.Tiempo() > 0){
                 System.out.println("No muero :D");
                 try {
-                    Thread.sleep(1000/5);
+                    Thread.sleep(Datos.tiempoEsperaThread);
                 }catch (InterruptedException ex) {
                     Logger.getLogger(FaseEjecucionComprobacionTamano.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("La hebra ce mamó");

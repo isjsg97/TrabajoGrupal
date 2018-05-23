@@ -91,6 +91,13 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     @Override
     public void collision(PhysicsCollisionEvent event) {
         
+        if(!event.getNodeB().getName().equals("Coche")){
+            return;
+        }
+        
+        /*if(event.get){
+            
+        }*/
         System.out.println("CHOQUE");
         Colision(event);
     }
@@ -105,14 +112,14 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         float[] ang = new float[3];
         float roty = spatial.getWorldRotation().toAngles(ang)[1];
         
-        System.out.println("Rot y: " + roty);
-        System.out.println("Rot y quaternion: " + spatial.getWorldRotation());
+        //System.out.println("Rot y: " + roty);
+        //System.out.println("Rot y quaternion: " + spatial.getWorldRotation());
         
         mivel = Operaciones.RotarVectorY(mivel, Operaciones.RadtoDeg(-roty));
         
         fisicaCoche.setPhysicsLocation(Operaciones.SumarVectores(fisicaCoche.getPhysicsLocation(), mivel.mult(tpf)));
         
-        float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(rotRuedas)) * tpf / 10;
+        float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(rotRuedas)) * tpf;
         spatial.rotate(0, rotacion, 0);
         
         Quaternion rotCoche = fisicaCoche.getPhysicsRotation();

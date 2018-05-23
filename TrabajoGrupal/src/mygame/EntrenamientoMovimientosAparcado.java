@@ -5,6 +5,7 @@
  */
 package mygame;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.util.Random;
@@ -19,7 +20,11 @@ import weka.core.Instance;
  */
 public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
-    float tamanoCoche = 2;
+    
+    float tiempoEnManiobraEntrenando = 1;
+    float tiempoEnManiobraEjecucion = 5;
+    float multTiempo = tiempoEnManiobraEntrenando / tiempoEnManiobraEjecucion;
+    
     
     Spatial cocheDelante;
     Spatial cocheAtras;
@@ -41,16 +46,19 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     float angulo3;
     float tiempo3;
     
-    float velocidad4;
-    float angulo4;
-    float tiempo4;
+    float velocidad4 = 0; //Se acabo, se para
+    float angulo4 = 0;
+    float tiempo4 = 0;
     
     
     
-    public EntrenamientoMovimientosAparcado(CocheIA ag, Main m, String ta, int it, Classifier cono) {
+    public EntrenamientoMovimientosAparcado(CocheIA ag, Main m, String ta, int it, Classifier cono, Spatial cDelante, Spatial cAtras) {
         super(ag, m, ta, it, cono);
         
         fase = 0;
+        
+        cocheDelante = cDelante;
+        cocheAtras = cAtras;
     }
 
     @Override
@@ -61,15 +69,39 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         Random ran = new Random();
         
         //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
-        float espacio = tamanoCoche  * 2  + 1 + ran.nextFloat() * 2; 
+        float espacio = Operaciones.EspacioMinimoAleatorio(); 
         
-        cocheDelante = main.CrearCoche(false, new Vector3f(0,0,espacio/2));
-        cocheAtras = main.CrearCoche(false, new Vector3f(0,0,-espacio/2));
+        Main.SetPosicion(cocheDelante, new Vector3f(0,0,espacio/2));
+        Main.SetPosicion(cocheAtras, new Vector3f(0,0,-espacio/2));
+        
+        //cocheDelante.setLocalTranslation(new Vector3f(0,0,espacio/2));
+        //cocheAtras.setLocalTranslation(new Vector3f(0,0,-espacio/2));
+        
+                
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
     }
 
     @Override
     void PreparacionAgente() {
-        agente.Spatial().setLocalTranslation(new Vector3f(1,0,0));
+        //agente.Spatial().setLocalTranslation(Datos.PosInicial());
+        Main.SetPosicion(agente.Spatial(),Datos.PosInicial());
+        
+                
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
     }
 
     @Override
@@ -134,7 +166,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
     }
 
-   
+   //Mirar Condiciones ifs
     void GuardarFracaso() {
         Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
         casoAdecidir.setDataset(casosEntrenamiento);
@@ -211,5 +243,201 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     @Override
     void Entrenamiento() {
         
+        for(int iter = 0; iter < iteraciones; iter++){
+            
+            PreparacionEscenario();
+            
+            PreparacionAgente();
+            
+            Fase1();
+            
+            for(fase = 0; fase < 4; fase++){
+                
+                
+                try {
+                    Thread.sleep(Datos.tiempoEsperaThread);
+                }catch (InterruptedException ex) {
+                    Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("La hebra ce mamó");
+                }
+                
+            }
+        }
+        
+    }
+    
+    
+    //float distancia;
+    
+    Vector3f posAgenteInicialFase1;
+    Quaternion rotAgenteInicialFase1;
+    
+    void PreFase1(){
+        fase = 1;
+        Main.SetPosicion(agente.Spatial(), posAgenteInicialFase1);
+        Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase1);
+        agente.Tiempo(0);
+        agente.Colision(null);
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+    }
+    
+    void Fase1(){ //Se situa el agente al lado del coche de delante
+        
+        posAgenteInicialFase1 = agente.Spatial().getWorldTranslation().clone();
+        rotAgenteInicialFase1 = agente.Spatial().getWorldRotation().clone();
+        
+        for(float distancia = -Datos.tamanoCoche/2; distancia < Datos.tamanoCoche/2; distancia += 0.25f){
+            PreFase1();
+            
+            //System.out.pr
+            
+            Vector3f posFinal = Operaciones.SumarVectores(cocheDelante.getWorldTranslation(), new Vector3f(0,0,distancia));
+            posFinal.x = Datos.offsetPocAgenteX;
+            
+            float distAPuntoFinal = agente.Spatial().getWorldTranslation().distance(posFinal);
+            
+            velocidad1 = distAPuntoFinal / tiempoEnManiobraEntrenando;
+            tiempo1 = tiempoEnManiobraEntrenando;
+            angulo1 = 0;
+            
+            
+            System.out.println("Velocidad1 : " + velocidad1);
+            System.out.println("Tiempo1 : " + tiempo1);
+            
+            agente.Velocidad(velocidad1);
+            agente.Rotacion(angulo1);
+            agente.Tiempo(tiempo1);
+            
+            
+            while(agente.Tiempo() > 0 && agente.Colision() == null){
+                try {
+                    Thread.sleep(Datos.tiempoEsperaThread);
+                }catch (InterruptedException ex) {
+                    Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("La hebra ce mamó");
+                }
+            }
+            
+            Fase2();
+            
+        }
+    }
+    
+    Vector3f posAgenteInicialFase2;
+    Quaternion rotAgenteInicialFase2;
+    void PreFase2(){
+        fase = 2;
+        Main.SetPosicion(agente.Spatial(), posAgenteInicialFase2);
+        Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase2);
+        agente.Tiempo(0);
+        agente.Colision(null);
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+    }
+    
+    void Fase2(){ //Mete el culo del coche
+        
+        posAgenteInicialFase2 = agente.Spatial().getWorldTranslation().clone();
+        rotAgenteInicialFase2 = agente.Spatial().getWorldRotation().clone();
+        
+        for(float velocidad = 0.5f ; velocidad < 8; velocidad += 0.5f){
+            for(float angulo = 5; angulo < 40; angulo += 5){
+                PreFase2();
+                
+                velocidad2 = -velocidad / multTiempo;
+                tiempo2 = tiempoEnManiobraEntrenando;
+                angulo2 = -angulo;
+                
+                agente.Velocidad(velocidad2);
+                agente.Rotacion(angulo2);
+                agente.Tiempo(tiempo2);
+                
+                while(agente.Tiempo() > 0 && agente.Colision() == null){
+                    try {
+                        Thread.sleep(Datos.tiempoEsperaThread);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("La hebra ce mamó");
+                    }
+                }
+                
+                if(agente.Colision() == null){
+                    Fase3();
+                }
+            } 
+        }
+    }
+    
+    Vector3f posAgenteInicialFase3;
+    Quaternion rotAgenteInicialFase3;
+    void PreFase3(){
+        fase = 3;
+        Main.SetPosicion(agente.Spatial(), posAgenteInicialFase3);
+        Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase3);
+        agente.Tiempo(0);
+        agente.Colision(null);
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+    }
+    
+    void Fase3(){ //Se alinea con los otros coches
+        
+        posAgenteInicialFase3 = agente.Spatial().getWorldTranslation().clone();
+        rotAgenteInicialFase3 = agente.Spatial().getWorldRotation().clone();
+        
+        for(float velocidad = 0.5f ; velocidad < 8; velocidad += 0.5f){
+            for(float angulo = 5; angulo < 40; angulo += 5){
+                PreFase2();
+                
+                velocidad2 = -velocidad / multTiempo;
+                tiempo2 = tiempoEnManiobraEntrenando;
+                angulo2 = -angulo;
+                
+                agente.Velocidad(velocidad2);
+                agente.Rotacion(angulo2);
+                agente.Tiempo(tiempo2);
+                
+                while(agente.Tiempo() > 0 && agente.Colision() == null){
+                    try {
+                        Thread.sleep(Datos.tiempoEsperaThread);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("La hebra ce mamó");
+                    }
+                }
+                
+                if(agente.Colision() == null){
+                    agente.Tiempo(0);
+                    try {
+                        Thread.sleep(2000);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("La hebra ce mamó");
+                    }
+                }
+            } 
+        }
     }
 }

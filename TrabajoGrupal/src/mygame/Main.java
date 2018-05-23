@@ -31,6 +31,8 @@ public class Main extends SimpleApplication {
     private BulletAppState estadosFisicos = new BulletAppState();
     private RigidBodyControl fisicaCocheIA;
     
+    
+    CocheIA agente;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -51,13 +53,15 @@ public class Main extends SimpleApplication {
         //fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
         
         
-        /*CocheIA cocheIAScript = CrearCocheIA(new Vector3f(1,0,0)); 
+        /*CocheIA cocheIAScript = CrearCocheIA(new Vector3f(1,4,0));
+        //CrearCocheIA(new Vector3f(1,0,0));/*
         Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
         entrenamiento.Entrenar();
         
         /**/
         
-        Ejecutar();
+        Entrenar(1);
+        //Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
@@ -87,7 +91,9 @@ public class Main extends SimpleApplication {
         
         CocheIA res = new CocheIA(1, coche);
         estadosFisicos.getPhysicsSpace().addCollisionListener(res);
+         
         coche.addControl(res);
+        estadosFisicos.getPhysicsSpace().add(res);
         
         return res;
     }
@@ -96,7 +102,7 @@ public class Main extends SimpleApplication {
         
         System.out.println("Creo coche en: " + pos);
         
-        Node res = new Node();
+        Node res = new Node("Coche");
         
         Spatial buggy = assetManager.loadModel("/Models/Buggy/Buggy.j3o");
         
@@ -144,14 +150,9 @@ public class Main extends SimpleApplication {
         return res;
     }
     
-    @Override
-    public void simpleUpdate(float tpf) {
-        if(agente != null){
-            agente.physicsTick(estadosFisicos.getPhysicsSpace(), tpf);
-            CamaraSeguirAgente();
-        }
-        
-    }
+    
+    
+    
 
     @Override
     public void simpleRender(RenderManager rm) {
@@ -183,6 +184,15 @@ public class Main extends SimpleApplication {
         geom.setMaterial(mat);
 
         geom.setLocalTranslation(0, -0.1f, 0);
+        
+        
+        RigidBodyControl fisica = new RigidBodyControl(0); //creación la fisicaBola con masa 1 Kg
+        geom.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
+        fisica.setRestitution(0.9f);
+        geom.addControl(fisica);
+        estadosFisicos.getPhysicsSpace().add( fisica );
+            
+        fisica.setPhysicsLocation(geom.getWorldTranslation());
         
         rootNode.attachChild(geom);
     }
@@ -219,13 +229,64 @@ public class Main extends SimpleApplication {
         super.finalize();
        System.out.println("MORIR");
     }
-   
-   
-   
-   
+    
+    
+    @Override
+    public void simpleUpdate(float tpf) {
+        if(agente != null){
+            agente.physicsTick(estadosFisicos.getPhysicsSpace(), tpf);
+            CamaraSeguirAgente();
+        }
+        
+        if(cambiospendientes){
+            for(CambioTransform cambio : cambios){
+                cambio.Cambiar();
+            }
+            
+            cambios.clear();
+            
+            cambiospendientes = false;
+        }
+        
+    }
+    
+    public static boolean cambiospendientes = false;
+    static List<CambioTransform> cambios = new ArrayList<>();
+    
+    public static void SetPosicion(Spatial s, Vector3f pos){
+        cambios.add(new CambioTransform(s, pos, null));
+        
+        cambiospendientes = true;
+    }
+    
+    public static void SetRotacion(Spatial s, Quaternion rot){ 
+        cambios.add(new CambioTransform(s, null, rot));
+        
+        cambiospendientes = true;
+    }
+    
+    //---------------------------------ENTRENAMIENTO-----------------------------------------
+    void Entrenar(int num){
+        Entrenamiento entrenamiento;
+        
+        if(num == 0){
+            agente = CrearCocheIA(Datos.PosInicial());
+            entrenamiento = new EntrenamientoComprobacionTamano(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        }else if(num == 1){
+            agente = CrearCocheIA(Datos.PosInicial());
+            Node cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
+            Node cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
+            
+            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "ComprobacionTamano", 100, ObtenerClasificador(), cocheDelante, cocheAtras);
+        }else{
+            agente = CrearCocheIA(Datos.PosInicial());
+            entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        }
+        
+        entrenamiento.Entrenar();
+    }
+
    //------------------------------------------EJECUCION-------------------------------------
-   
-    CocheIA agente;
     Vector3f[] coches;
    
     void Ejecutar(){
