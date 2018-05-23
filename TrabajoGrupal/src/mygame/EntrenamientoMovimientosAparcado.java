@@ -21,7 +21,7 @@ import weka.core.Instance;
 public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
     
-    float tiempoEnManiobraEntrenando = 1;
+    float tiempoEnManiobraEntrenando = 0.1f;
     float tiempoEnManiobraEjecucion = 5;
     float multTiempo = tiempoEnManiobraEntrenando / tiempoEnManiobraEjecucion;
     
@@ -117,7 +117,27 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     boolean EsExito() {
         boolean res;
         
-        res = agente.Tiempo() <= 0 && agente.Colision() == null;
+        //res = agente.Tiempo() <= 0 && agente.Colision() == null;
+        
+        float [] rotCocheDelanteArray = new float[3]; 
+        rotCocheDelanteArray = cocheDelante.getWorldRotation().toAngles(rotCocheDelanteArray);
+        
+        float [] rotCocheAtrasArray = new float[3]; 
+        rotCocheAtrasArray = cocheAtras.getWorldRotation().toAngles(rotCocheAtrasArray);
+        
+        float mediarot = (Operaciones.RadtoDeg(rotCocheDelanteArray[1]) + Operaciones.RadtoDeg(rotCocheAtrasArray[1])) / 2;
+        
+        float [] rotAgenteArray = new float[3]; 
+        rotAgenteArray = agente.Spatial().getWorldRotation().toAngles(rotAgenteArray);
+        
+        float rotagente = Operaciones.RadtoDeg(rotAgenteArray[1]);
+        
+        float mediaposx = (cocheDelante.getWorldTranslation().x + cocheAtras.getWorldTranslation().x) / 2;
+        float miposx = agente.Spatial().getWorldTranslation().x;
+        
+        res = Math.abs(mediarot - rotagente) < 10 && Math.abs(mediaposx - miposx) < 0.5f;
+        
+        System.out.println("Rotacion ideal: " + mediarot + ", Rotacion actual: " + rotagente + ", Resultado: " + res);
         
         return res;
     }
@@ -409,15 +429,15 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
         for(float velocidad = 0.5f ; velocidad < 8; velocidad += 0.5f){
             for(float angulo = 5; angulo < 40; angulo += 5){
-                PreFase2();
+                PreFase3();
                 
-                velocidad2 = -velocidad / multTiempo;
-                tiempo2 = tiempoEnManiobraEntrenando;
-                angulo2 = -angulo;
+                velocidad3 = -velocidad / multTiempo;
+                tiempo3 = tiempoEnManiobraEntrenando;
+                angulo3 = angulo;
                 
-                agente.Velocidad(velocidad2);
-                agente.Rotacion(angulo2);
-                agente.Tiempo(tiempo2);
+                agente.Velocidad(velocidad3);
+                agente.Rotacion(angulo3);
+                agente.Tiempo(tiempo3);
                 
                 while(agente.Tiempo() > 0 && agente.Colision() == null){
                     try {
@@ -428,7 +448,9 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                     }
                 }
                 
-                if(agente.Colision() == null){
+                if(agente.Colision() == null && EsExito()){
+                    
+                    System.out.print("TRUE");
                     agente.Tiempo(0);
                     try {
                         Thread.sleep(2000);

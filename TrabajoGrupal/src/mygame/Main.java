@@ -60,7 +60,7 @@ public class Main extends SimpleApplication {
         
         /**/
         
-        Entrenar(1);
+        Entrenar(2);
         //Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -277,10 +277,10 @@ public class Main extends SimpleApplication {
             Node cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
             Node cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
             
-            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "ComprobacionTamano", 100, ObtenerClasificador(), cocheDelante, cocheAtras);
+            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 100, ObtenerClasificador(), cocheDelante, cocheAtras);
         }else{
             agente = CrearCocheIA(Datos.PosInicial());
-            entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
+            entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "MovimientosCentrar", 100, ObtenerClasificador());
         }
         
         entrenamiento.Entrenar();

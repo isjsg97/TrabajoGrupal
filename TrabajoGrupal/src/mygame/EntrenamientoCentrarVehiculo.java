@@ -28,10 +28,10 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     float distanciaCocheDelante;
     float distanciaCocheAtras;
     
-    float velocidad = 20;
+    float velocidad;
     float angulo = 0;
     
-    float tiempo;
+    float tiempo = 2;
 
     
     float espacio;
@@ -60,7 +60,7 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     void PreparacionDatos() {
         
         Random ran = new Random();
-        espacio = tamanoCoche  * 2 + (ran.nextFloat() * 2)+ espacioManiobra; //comprobar que sea mayor que espacio necesario
+        espacio = Operaciones.EspacioMinimoAleatorio(); //comprobar que sea mayor que espacio necesario
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);
@@ -76,14 +76,16 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
         
         float distancia = posfinal.distance(poscoche);
         
-        tiempo = distancia / velocidad;
+        velocidad = distancia / tiempo;
         
+        
+        System.out.println("Velocidad: " + velocidad);
     }
 
     //Es Regresion esto no se usa
     @Override
     boolean EsExito() {
-        return cocheDelante.distance(poscocheia) == cocheAtras.distance(poscocheia);
+        return Math.abs(cocheDelante.distance(poscocheia) - cocheAtras.distance(poscocheia)) < 0.25f;
     }
 
     
@@ -94,9 +96,9 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
         casoAdecidir.setDataset(casosEntrenamiento);   
         casoAdecidir.setValue(0, distanciaCocheDelante);
         casoAdecidir.setValue(1, distanciaCocheAtras);
-        casoAdecidir.setValue(2, velocidad);
-        casoAdecidir.setValue(3, angulo);
-        casoAdecidir.setValue(4, tiempo);       
+        casoAdecidir.setValue(2, angulo);
+        casoAdecidir.setValue(3, tiempo);
+        casoAdecidir.setValue(4, velocidad);       
         casosEntrenamiento.add(casoAdecidir);
     }
 

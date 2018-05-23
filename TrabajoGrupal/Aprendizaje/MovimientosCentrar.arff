@@ -2,10 +2,8 @@
 
 @attribute distanciaCocheDelante numeric
 @attribute distanciaCocheAtras numeric
-
-@attribute velocidad numeric
 @attribute angulo numeric
-
 @attribute tiempo numeric
+@attribute velocidad numeric
 
 @data
