@@ -19,8 +19,6 @@ import weka.core.Instance;
  */
 public class EntrenamientoComprobacionTamano extends Entrenamiento{
 
-    private float tamanoCoche = 2f;
-    private float espacioManiobra = 1f;
     
     Vector3f cocheDelante;
     Vector3f cocheAtras;
@@ -53,7 +51,7 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
         Random ran = new Random();
         
         //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
-        float espacio = tamanoCoche  * 2 + ((ran.nextFloat() * 2) - 1) * 2; 
+        float espacio = Operaciones.EspacioAleatorio(); 
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);
@@ -73,7 +71,7 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
 
     @Override
     boolean EsExito() {
-        float distanciaNecesaria = tamanoCoche * 2 + espacioManiobra;
+        float distanciaNecesaria = Datos.DistanciaNecesaria();
         float distanciaDisponible = cocheDelante.distance(cocheAtras);
         
         boolean exito = distanciaDisponible >= distanciaNecesaria;

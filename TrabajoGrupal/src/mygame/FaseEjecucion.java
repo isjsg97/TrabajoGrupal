@@ -28,6 +28,7 @@ public abstract class FaseEjecucion extends Thread{
     public void PrepararEjecucion(Object... params){
         agente = (CocheIA) params[0];
         conocimiento = (Classifier) params[1];
+        casosEntrenamiento = (Instances) params[2];
     }
     
     
@@ -43,6 +44,8 @@ public abstract class FaseEjecucion extends Thread{
     
     @Override
     public void run(){
+        
+        System.out.println("Voy a Ejecucion");
         Ejecucion();
     }
     

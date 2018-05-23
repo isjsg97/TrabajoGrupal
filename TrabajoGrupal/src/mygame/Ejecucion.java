@@ -27,10 +27,6 @@ public class Ejecucion extends Thread{
     CocheIA cocheIA;
     
     Vector3f[] coches;
-    private float tamanoCoche = 2f;
-    private float espacioManiobra = 1f;
-    
-    
     
     Classifier conocimiento;
     
@@ -44,8 +40,7 @@ public class Ejecucion extends Thread{
     
     Main main;
     
-    public Ejecucion(int numc, Main m, Classifier cono, FaseEjecucion[] fases, String[] tabs){
-        coches = new Vector3f[numc];
+    public Ejecucion(Main m, Classifier cono, FaseEjecucion[] fases, String[] tabs, CocheIA agent, Vector3f[] cars){
         
         conocimiento = cono;
         
@@ -53,38 +48,13 @@ public class Ejecucion extends Thread{
         tablas = tabs;
         
         main = m;
+        
+        coches = cars;
+        cocheIA = agent;
     }
     
     
-    void ConseguirListaCoches(){
-        
-        Vector3f pos = new Vector3f(0,0,0);
-        Random ran = new Random();
-        
-        for(int i = 0; i < coches.length-1; i++){
-            
-            float despl = tamanoCoche * 2f + ran.nextFloat() * (espacioManiobra + 2);
-            //float despl = tamanoCoche  + ran.nextFloat() * (espacioManiobra);
-            
-            Vector3f vdespl = new Vector3f(0,0,despl);
-            
-            pos = Operaciones.SumarVectores(pos, vdespl);
-            
-            coches[i] = pos.clone();
-            
-            main.CrearCoche(false, pos);
-        }
-        
-        float despl = tamanoCoche * 2 + espacioManiobra + 1;
-            
-        Vector3f vdespl = new Vector3f(0,0,despl);
-            
-        pos = Operaciones.SumarVectores(pos, vdespl);
-            
-        coches[coches.length - 1] = pos.clone();
-        
-        main.CrearCoche(false, pos);
-    }
+    
     
     Instances ObtenerFicheroEntrenamiento(String file){
         
@@ -114,10 +84,10 @@ public class Ejecucion extends Thread{
     @Override
     public void run(){
         
-        ConseguirListaCoches();
+        //ConseguirListaCoches();
         
         
-        cocheIA = main.CrearCocheIA(new Vector3f(1,0,0));
+        
         
         for(int i = 0; i < fasesEjecucion.length; i++){
             
@@ -135,11 +105,15 @@ public class Ejecucion extends Thread{
                 
             }
             
-            fase.Ejecutar();
+            //fase.Ejecutar(); //No va con esto y no tiene explicación alguna, cosas raras de Java como siempre
+            fase.start();
             
             while(!fase.FaseCompletada()){
+                
+                System.out.println("Matame si puedes chaval");
+                
                 try {
-                    Thread.sleep(1/5);
+                    Thread.sleep(1000);
                 }catch (InterruptedException ex) {
                     Logger.getLogger(Ejecucion.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("La hebra ce mamó");

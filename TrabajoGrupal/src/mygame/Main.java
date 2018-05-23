@@ -15,6 +15,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.*;
@@ -48,10 +49,11 @@ public class Main extends SimpleApplication {
         
       
         //fisicaCocheIA = cocheIA.getControl(RigidBodyControl.class);
-        //CocheIA cocheIAScript = CrearCocheIA(new Vector3f(1,0,0));
         
-        /*Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
-        entrenamiento.Entrenar();*/
+        
+        /*CocheIA cocheIAScript = CrearCocheIA(new Vector3f(1,0,0)); 
+        Entrenamiento entrenamiento = new EntrenamientoComprobacionTamano(cocheIAScript, this, "ComprobacionTamano", 100, ObtenerClasificador());
+        entrenamiento.Entrenar();
         
         /**/
         
@@ -67,6 +69,11 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(geom);
         
         rootNode.attachChild(CrearCoche());*/
+        
+        
+        //CrearCoche(false, new Vector3f(0,0,0));
+        //CrearCoche(false, new Vector3f(0,0,2));
+        
         
         //C# UNITY MICROSOFT VISUAL STUDIO WINDOWS INTEL NVIDIA <3 <3 <3 <3
     }
@@ -87,6 +94,8 @@ public class Main extends SimpleApplication {
     
     public Node CrearCoche(boolean esIA, Vector3f pos){
         
+        System.out.println("Creo coche en: " + pos);
+        
         Node res = new Node();
         
         Spatial buggy = assetManager.loadModel("/Models/Buggy/Buggy.j3o");
@@ -99,13 +108,15 @@ public class Main extends SimpleApplication {
         //Material mat = new Material( assetManager, "Common/MatDefs/Light/Lighting.j3md");
         //mat.setBoolean("UseMaterialColors",true);
         //mat.setColor ("Color", ColorRGBA.Blue);
-        buggy.scale(1f);
+        buggy.scale(0.30f);
         buggy.setMaterial(mat);
         //geometrybuggy.setLocalTranslation(0, -1f, 0);
         res.attachChild(buggy);
         
         
         res.setLocalTranslation(pos);
+        
+        rootNode.attachChild(res);
         
         if(!esIA){
         
@@ -115,40 +126,14 @@ public class Main extends SimpleApplication {
             fisica.setRestitution(0.9f);
             res.addControl(fisica);
             estadosFisicos.getPhysicsSpace().add( fisica );
+            
+            fisica.setPhysicsLocation(pos);
         }
         
         return res;
     }
     
-    void Ejecutar(){
-        
-        List<FaseEjecucion> fases = new ArrayList<>();
-        fases.add(new FaseEjecucionComprobacionTamano());
-        
-        
-        //FaseEjecucion[] fasearray = (FaseEjecucion[]) fases.toArray();
-        FaseEjecucion[] fasearray = new FaseEjecucion[fases.size()];
-        fasearray = fases.toArray(fasearray);
-        /*//List to Array
-        int i = 0;
-        for(FaseEjecucion f : fases){
-            fasearray[i] = f;
-            i++;
-        }*/
-        
-        
-        List<String> tablas = new ArrayList<>();
-        tablas.add("ComprobacionTamano");
-        
-        
-        String[] tablasarray = new String[tablas.size()];
-        tablasarray = tablas.toArray(tablasarray);
-        
-        Ejecucion ejecucion = new Ejecucion(10, this, ObtenerClasificador(), fasearray, tablasarray);
-        //EjecucionAntiguo ejecucion = new EjecucionAntiguo(10, ObtenerClasificador(), "ComprobacionTamano"); 
-       
-        ejecucion.Ejecutar();
-    }
+    
     
     public Classifier ObtenerClasificador(){
         Classifier res; 
@@ -161,7 +146,11 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
+        if(agente != null){
+            agente.physicsTick(estadosFisicos.getPhysicsSpace(), tpf);
+            CamaraSeguirAgente();
+        }
+        
     }
 
     @Override
@@ -199,7 +188,7 @@ public class Main extends SimpleApplication {
     }
     
     void PonerCamara(){
-        cam.setLocation(new Vector3f(0,30,0));
+        cam.setLocation(new Vector3f(0,10,0));
         //cam.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y);
         
         cam.setRotation(new Quaternion().fromAngles(Operaciones.DegtoRad(90), Operaciones.DegtoRad(-90), 0));
@@ -207,7 +196,15 @@ public class Main extends SimpleApplication {
         this.setDisplayFps(false);
     }
     
-   public static void Destruir(Spatial nodo){
+    void CamaraSeguirAgente(){
+        Vector3f offset = new Vector3f(Datos.offsetPocAgenteX/2, 0, 0);
+        Vector3f posFinal = Operaciones.SumarVectores(offset, agente.Spatial().getWorldTranslation());
+        posFinal.y = 10;
+        
+        cam.setLocation(posFinal);
+    }
+    
+    public static void Destruir(Spatial nodo){
         nodo.removeFromParent();
     }
     
@@ -216,4 +213,77 @@ public class Main extends SimpleApplication {
         rootNodeaux.attachChild(nodo);
     }*/
 
+    @Override
+    public void finalize() throws Throwable{
+       
+        super.finalize();
+       System.out.println("MORIR");
+    }
+   
+   
+   
+   
+   //------------------------------------------EJECUCION-------------------------------------
+   
+    CocheIA agente;
+    Vector3f[] coches;
+   
+    void Ejecutar(){
+        
+        ConseguirListaCoches(10);
+        
+        agente = CrearCocheIA(Datos.PosInicial());
+        
+        List<FaseEjecucion> fases = new ArrayList<>();
+        fases.add(new FaseEjecucionComprobacionTamano());
+        
+        
+        FaseEjecucion[] fasearray = new FaseEjecucion[fases.size()];
+        fasearray = fases.toArray(fasearray);
+
+        
+        
+        List<String> tablas = new ArrayList<>();
+        tablas.add("ComprobacionTamano");
+        
+        
+        String[] tablasarray = new String[tablas.size()];
+        tablasarray = tablas.toArray(tablasarray);
+        
+        Ejecucion ejecucion = new Ejecucion(this, ObtenerClasificador(), fasearray, tablasarray, agente, coches);
+        //EjecucionAntiguo ejecucion = new EjecucionAntiguo(10, ObtenerClasificador(), "ComprobacionTamano"); 
+       
+        ejecucion.Ejecutar();
+    }
+   
+    void ConseguirListaCoches(int num){
+        
+        coches = new Vector3f[num];
+        
+        Vector3f pos = new Vector3f(0,0,0);
+        
+        for(int i = 0; i < coches.length-1; i++){
+            
+            float despl = Operaciones.EspacioAleatorio();
+            //float despl = tamanoCoche  + ran.nextFloat() * (espacioManiobra);
+            
+            Vector3f vdespl = new Vector3f(0,0,despl);
+            
+            pos = Operaciones.SumarVectores(pos, vdespl);
+            
+            coches[i] = pos.clone();
+            
+            CrearCoche(false, pos);
+        }
+        
+        float despl = Operaciones.EspacioMinimoAleatorio();
+            
+        Vector3f vdespl = new Vector3f(0,0,despl);
+            
+        pos = Operaciones.SumarVectores(pos, vdespl);
+            
+        coches[coches.length - 1] = pos.clone();
+        
+        CrearCoche(false, pos);
+    }
 }

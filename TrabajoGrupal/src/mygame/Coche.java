@@ -80,6 +80,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
 
     @Override
     public void physicsTick(PhysicsSpace space, float tpf) {
+        //System.out.println("TICK");
         if(tiempo > 0 && colision == null){
             Avanzar(tpf);
             tiempo -= tpf;
@@ -89,6 +90,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
+        
+        System.out.println("CHOQUE");
         Colision(event);
     }
     
@@ -109,7 +112,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         
         fisicaCoche.setPhysicsLocation(Operaciones.SumarVectores(fisicaCoche.getPhysicsLocation(), mivel.mult(tpf)));
         
-        float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(30)) * tpf / 10;
+        float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(rotRuedas)) * tpf / 10;
         spatial.rotate(0, rotacion, 0);
         
         Quaternion rotCoche = fisicaCoche.getPhysicsRotation();

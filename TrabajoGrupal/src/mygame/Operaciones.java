@@ -6,6 +6,7 @@
 package mygame;
 
 import com.jme3.math.Vector3f;
+import java.util.Random;
 
 /**
  *
@@ -48,6 +49,27 @@ public class  Operaciones {
         //y' = x sin Î¸ + y cos Î¸
         
         return res;
+    }
+    
+    
+    public static float EspacioAleatorio(){
+        
+        Random ran = new Random();
+        
+        float res = Datos.tamanoCoche * 2f + ((ran.nextFloat() * 1.5f) - 1f )* (Datos.espacioManiobra + 1);
+        
+        return res;
+    }
+    
+    public static float EspacioMinimoAleatorio(){
+        
+        Random ran = new Random();
+        
+        float res = Datos.tamanoCoche * 2f + Datos.espacioManiobra + 2;
+        
+        return res;
+        
+        
     }
     
 }

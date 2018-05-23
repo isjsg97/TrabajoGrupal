@@ -31,9 +31,11 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
     
     @Override
     public void PrepararEjecucion(Object... params){
-        super.PrepararEjecucion(params[0], params[1]);
+        super.PrepararEjecucion(params[0], params[1], params[2]);
         
-        coches = (Vector3f[])params[2];
+        System.out.println(params.length);
+        
+        coches = (Vector3f[])params[3];
     } 
     
     @Override
@@ -43,12 +45,13 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
 
     @Override
     public boolean FaseCompletada() {
-        return false;
+        return completado;
     }
 
     @Override
     public void Ejecucion() {
         
+        System.out.println("ENTRO");
         Vector3f delante;
         Vector3f atras = coches[0];
         for(int i = 1; i < coches.length; i++){
@@ -57,9 +60,14 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             
             CalcularDatosPosicionInicial(delante, atras);
             
+            agente.Velocidad(velocidad);
+            agente.Rotacion(angulo);
+            agente.Tiempo(tiempo);
+            
             while(agente.Tiempo() > 0){
+                System.out.println("No muero :D");
                 try {
-                    Thread.sleep(1/5);
+                    Thread.sleep(1000/5);
                 }catch (InterruptedException ex) {
                     Logger.getLogger(FaseEjecucionComprobacionTamano.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("La hebra ce mamó");
@@ -73,13 +81,19 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             }
             
             atras = delante;
+            
+            System.out.println("No muero :)");
         }
         
+        System.out.println("No muero ^_^");
         
         completado = true;
     }
     
     
+    public void Ejecutar1(){
+        start();
+    }
     
     
     boolean EsTamanoCorrecto(Vector3f ddelante, Vector3f datras){
