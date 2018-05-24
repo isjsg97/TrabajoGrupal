@@ -16,6 +16,7 @@ import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.*;
@@ -60,7 +61,7 @@ public class Main extends SimpleApplication {
         
         /**/
         
-        Entrenar(2);
+        Entrenar(1);
         //Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -251,7 +252,7 @@ public class Main extends SimpleApplication {
     }
     
     public static boolean cambiospendientes = false;
-    static List<CambioTransform> cambios = new ArrayList<>();
+    static List<CambioTransform> cambios = new Vector<>();
     
     public static void SetPosicion(Spatial s, Vector3f pos){
         cambios.add(new CambioTransform(s, pos, null));
