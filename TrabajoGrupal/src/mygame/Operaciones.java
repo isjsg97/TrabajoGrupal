@@ -56,7 +56,7 @@ public class  Operaciones {
         
         Random ran = new Random();
         
-        float res = Datos.tamanoCoche * 2f + ((ran.nextFloat() * 1.5f) - 1f )* (Datos.espacioManiobra + 1);
+        float res = Datos.DistanciaNecesaria() + ((ran.nextFloat() * 1.5f) - 1f )* (2);
         
         return res;
     }
@@ -65,7 +65,7 @@ public class  Operaciones {
         
         Random ran = new Random();
         
-        float res = Datos.tamanoCoche * 2f + Datos.espacioManiobra + 2;
+        float res = Datos.DistanciaNecesaria() + (ran.nextFloat() * 2);
         
         return res;
         
