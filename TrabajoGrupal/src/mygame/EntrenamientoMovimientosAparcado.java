@@ -21,7 +21,7 @@ import weka.core.Instance;
 public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
     
-    float tiempoEnManiobraEntrenando = 0.1f;
+    float tiempoEnManiobraEntrenando = 0.5f;
     float tiempoEnManiobraEjecucion = 5;
     float multTiempo = tiempoEnManiobraEntrenando / tiempoEnManiobraEjecucion;
     
@@ -92,6 +92,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     void PreparacionAgente() {
         //agente.Spatial().setLocalTranslation(Datos.PosInicial());
         Main.SetPosicion(agente.Spatial(),Datos.PosInicial());
+        Main.SetRotacion(agente.Spatial(),new Quaternion().fromAngles(0, 0, 0));
         
                 
         while(Main.cambiospendientes){
@@ -265,8 +266,11 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
         for(int iter = 0; iter < iteraciones; iter++){
             
+            System.out.println("SIGUIENTE ITERACION");
+            
             PreparacionEscenario();
             
+            //Arreglar Posicion Inicial
             PreparacionAgente();
             
             Fase1();
@@ -314,7 +318,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase1 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase1 = agente.Spatial().getWorldRotation().clone();
         
-        for(float distancia = -Datos.tamanoCoche/2; distancia < Datos.tamanoCoche/2; distancia += 0.25f){
+        for(float distancia = -Datos.tamanoCoche/2; distancia < Datos.tamanoCoche/2; distancia += 0.5f){
             PreFase1();
             
             //System.out.pr
@@ -375,8 +379,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase2 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase2 = agente.Spatial().getWorldRotation().clone();
         
-        for(float velocidad = 0.5f ; velocidad < 8; velocidad += 0.5f){
-            for(float angulo = 5; angulo < 40; angulo += 5){
+        for(float velocidad = 0.5f ; velocidad < 1; velocidad += 0.5f){
+            for(float angulo = 5; angulo < 30; angulo += 5){
                 PreFase2();
                 
                 velocidad2 = -velocidad / multTiempo;
@@ -387,7 +391,15 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                 agente.Rotacion(angulo2);
                 agente.Tiempo(tiempo2);
                 
-                while(agente.Tiempo() > 0 && agente.Colision() == null){
+                while(agente.Tiempo() > 0 && agente.Colision() == null && agente.Spatial().getWorldTranslation().x > -1){
+                    
+                     System.out.println(agente.Spatial().getWorldTranslation());
+                    
+                    if(agente.Spatial().getWorldTranslation().x <= -1){
+                        System.out.println("ME HE PASADO");
+                        
+                    }
+                    
                     try {
                         Thread.sleep(Datos.tiempoEsperaThread);
                     }catch (InterruptedException ex) {
@@ -395,6 +407,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                         System.out.println("La hebra ce mamó");
                     }
                 }
+                
+                agente.Tiempo(0);
                 
                 if(agente.Colision() == null){
                     Fase3();
@@ -427,8 +441,8 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase3 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase3 = agente.Spatial().getWorldRotation().clone();
         
-        for(float velocidad = 0.5f ; velocidad < 8; velocidad += 0.5f){
-            for(float angulo = 5; angulo < 40; angulo += 5){
+        for(float velocidad = 0.5f ; velocidad < 1.5f; velocidad += 0.5f){
+            for(float angulo = 5; angulo < 30; angulo += 5){
                 PreFase3();
                 
                 velocidad3 = -velocidad / multTiempo;

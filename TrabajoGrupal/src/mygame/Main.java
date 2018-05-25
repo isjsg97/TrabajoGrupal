@@ -177,7 +177,7 @@ public class Main extends SimpleApplication {
     }
     
     void PonerTerreno(){
-        Box b = new Box(10, 0.1f, 10);
+        Box b = new Box(100, 0.1f, 100);
         Geometry geom = new Geometry("Terreno", b);
 
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
