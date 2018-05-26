@@ -61,7 +61,7 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             CalcularDatosPosicionInicial(delante, atras);
             
             agente.Velocidad(velocidad);
-            agente.Rotacion(angulo);
+            agente.Rotacion(0);
             agente.Tiempo(tiempo);
             
             while(agente.Tiempo() > 0){

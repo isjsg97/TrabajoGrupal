@@ -15,11 +15,6 @@ import weka.core.Instance;
  * @author MykexMP
  */
 public class EntrenamientoCentrarVehiculo extends Entrenamiento {
-    
-    
-    float tamanoCoche = 2f;
-    float espacioManiobra = 1f;
-    
     Vector3f poscocheia;
     
     Vector3f cocheDelante;
@@ -28,13 +23,10 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     float distanciaCocheDelante;
     float distanciaCocheAtras;
     
-    float velocidad;
+    
     float angulo = 0;
-    
-    float tiempo = 2;
-
-    
-    float espacio;
+    float tiempo = 1;
+    float velocidad;
     
     public EntrenamientoCentrarVehiculo(CocheIA ag, Main m, String ta, int it, Classifier cono) {
         super(ag, m, ta, it, cono);
@@ -48,22 +40,19 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
     @Override
     void PreparacionAgente() {  
         
-        //Posicion CocheIA
-        Random ran2 = new Random();       
-        float t = ran2.nextFloat();
-        float aux = (1-t)*espacio/2 - t*espacio/2;
-        
-        poscocheia = new Vector3f(0,0,aux);
     }
+
 
     @Override
     void PreparacionDatos() {
         
         Random ran = new Random();
-        espacio = Operaciones.EspacioMinimoAleatorio(); //comprobar que sea mayor que espacio necesario
+        float espacio = Operaciones.EspacioMinimoAleatorio(); //comprobar que sea mayor que espacio necesario
         
         cocheDelante = new Vector3f(0,0,espacio/2);
         cocheAtras = new Vector3f(0,0,-espacio/2);
+        
+        poscocheia = new Vector3f(0,0, (ran.nextFloat() * 2 - 1) * espacio/2);
         
         distanciaCocheDelante = cocheDelante.distance(poscocheia);
         distanciaCocheAtras = cocheAtras.distance(poscocheia);
@@ -71,13 +60,13 @@ public class EntrenamientoCentrarVehiculo extends Entrenamiento {
         Vector3f posfinal = Operaciones.SumarVectores(cocheAtras, cocheDelante).mult(0.5f);
         //Vector3f poscoche = agente.Spatial().getWorldTranslation();
         
-        float poszcoche = -espacio/2 + tamanoCoche + ran.nextFloat() * 2;
-        Vector3f poscoche = Operaciones.SumarVectores(cocheAtras, new Vector3f(0,0, poszcoche));
-        
-        float distancia = posfinal.distance(poscoche);
+        float distancia = posfinal.distance(poscocheia);
         
         velocidad = distancia / tiempo;
         
+        if(distanciaCocheAtras > distanciaCocheDelante){
+            velocidad *= -1;
+        }
         
         System.out.println("Velocidad: " + velocidad);
     }

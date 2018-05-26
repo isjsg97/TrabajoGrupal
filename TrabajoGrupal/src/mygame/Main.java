@@ -63,7 +63,7 @@ public class Main extends SimpleApplication {
         
         /**/
         
-        //Entrenar(1);
+        //Entrenar(2);
         Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -86,11 +86,11 @@ public class Main extends SimpleApplication {
     }
     
     
-    public CocheIA CrearCocheIA(Vector3f pos){
+    public CocheIA CrearCocheIA(Vector3f pos, Quaternion rot){
         
         //Crear Rigidbody
         
-        Spatial coche = CrearCoche(true, pos);
+        Spatial coche = CrearCoche(true, pos, rot);
         
         CocheIA res = new CocheIA(1, coche);
         estadosFisicos.getPhysicsSpace().addCollisionListener(res);
@@ -101,7 +101,7 @@ public class Main extends SimpleApplication {
         return res;
     }
     
-    public Spatial CrearCoche(boolean esIA, Vector3f pos){
+    public Spatial CrearCoche(boolean esIA, Vector3f pos, Quaternion rot){
         
         System.out.println("Creo coche en: " + pos);
         
@@ -127,6 +127,7 @@ public class Main extends SimpleApplication {
         
         
         res.setLocalTranslation(pos);
+        res.setLocalRotation(rot);
         
         rootNode.attachChild(res);
         
@@ -282,16 +283,16 @@ public class Main extends SimpleApplication {
         Entrenamiento entrenamiento;
         
         if(num == 0){
-            agente = CrearCocheIA(Datos.PosInicial());
+            agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
             entrenamiento = new EntrenamientoComprobacionTamano(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
         }else if(num == 1){
-            agente = CrearCocheIA(Datos.PosInicial());
-            Spatial cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
-            Spatial cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
+            agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
+            Spatial cocheDelante = CrearCoche(false, new Vector3f(0,0,0), Datos.RotInicial());
+            Spatial cocheAtras = CrearCoche(false, new Vector3f(0,0,0), Datos.RotInicial());
             
             entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 10, ObtenerClasificador(), cocheDelante, cocheAtras);
         }else{
-            agente = CrearCocheIA(Datos.PosInicial());
+            agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
             entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "MovimientosCentrar", 100, ObtenerClasificador());
         }
         
@@ -305,11 +306,12 @@ public class Main extends SimpleApplication {
         
         ConseguirListaCoches(10);
         
-        agente = CrearCocheIA(Datos.PosInicial());
+        agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
         
         List<FaseEjecucion> fases = new ArrayList<>();
         fases.add(new FaseEjecucionComprobacionTamano());
         fases.add(new FaseEjecucionMovimientosAparcado());
+        fases.add(new FaseEjecucionCentrarVehiculo());
         
         FaseEjecucion[] fasearray = new FaseEjecucion[fases.size()];
         fasearray = fases.toArray(fasearray);
@@ -319,6 +321,7 @@ public class Main extends SimpleApplication {
         List<String> tablas = new ArrayList<>();
         tablas.add("ComprobacionTamano");
         tablas.add("MovimientosAparcado");
+        tablas.add("MovimientosCentrar");
         
         
         String[] tablasarray = new String[tablas.size()];
@@ -347,7 +350,7 @@ public class Main extends SimpleApplication {
             
             coches[i] = pos.clone();
             
-            CrearCoche(false, pos);
+            CrearCoche(false, pos, Datos.RotInicial());
         }
         
         float despl = Operaciones.EspacioMinimoAleatorio();
@@ -358,6 +361,6 @@ public class Main extends SimpleApplication {
             
         coches[coches.length - 1] = pos.clone();
         
-        CrearCoche(false, pos);
+        CrearCoche(false, pos, Datos.RotInicial());
     }
 }
