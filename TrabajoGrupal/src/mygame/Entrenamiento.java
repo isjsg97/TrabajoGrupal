@@ -72,6 +72,8 @@ public abstract class Entrenamiento extends Thread{
         
         
         GuardarFicheroEntrenamiento();
+        
+        System.out.println("ENTRENAMIENTO REALIZADO :D");
     }
     
     void ObtenerFicheroEntrenamiento(){

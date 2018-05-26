@@ -19,6 +19,7 @@ public abstract class FaseEjecucion extends Thread{
     Instances casosEntrenamiento;
     
     boolean completado = false;
+
     
     /*public void PrepararEjecucion(CocheIA ag, Classifier cono){
         agente = ag;
@@ -48,5 +49,7 @@ public abstract class FaseEjecucion extends Thread{
         System.out.println("Voy a Ejecucion");
         Ejecucion();
     }
+    
+    public abstract Object[] Datos();
     
 }

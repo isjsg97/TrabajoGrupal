@@ -15,9 +15,12 @@ import com.jme3.math.Vector3f;
 public class Datos {
     
     public static float tamanoCoche = 2;
-    public static float espacioManiobra = 1;
+    public static float espacioManiobra = 2f;
     public static float offsetPocAgenteX = 1.5f;
-    public static int tiempoEsperaThread = 1000 / 30;
+    public static int tiempoEsperaThread = 1000 / 10;
+    
+    
+    public static float tiempoEnManiobraEjecucion = 2;
     
     public static Vector3f PosInicial(){
         return new Vector3f(offsetPocAgenteX,0,0);

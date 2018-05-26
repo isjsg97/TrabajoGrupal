@@ -63,8 +63,8 @@ public class Main extends SimpleApplication {
         
         /**/
         
-        Entrenar(1);
-        //Ejecutar();
+        //Entrenar(1);
+        Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
         Geometry geom = new Geometry("Box", b);
@@ -229,13 +229,6 @@ public class Main extends SimpleApplication {
     public static void Crear(Spatial nodo){
         rootNodeaux.attachChild(nodo);
     }*/
-
-    @Override
-    public void finalize() throws Throwable{
-       
-        super.finalize();
-       System.out.println("MORIR");
-    }
     
     
     @Override
@@ -270,7 +263,7 @@ public class Main extends SimpleApplication {
     }
     
     public static boolean cambiospendientes = false;
-    static List<CambioTransform> cambios = new LinkedList<>();
+    static List<CambioTransform> cambios = new Vector<>();
     
     public static void SetPosicion(Spatial s, Vector3f pos){
         cambios.add(new CambioTransform(s, pos, null));
@@ -296,7 +289,7 @@ public class Main extends SimpleApplication {
             Spatial cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
             Spatial cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
             
-            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 100, ObtenerClasificador(), cocheDelante, cocheAtras);
+            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 10, ObtenerClasificador(), cocheDelante, cocheAtras);
         }else{
             agente = CrearCocheIA(Datos.PosInicial());
             entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "MovimientosCentrar", 100, ObtenerClasificador());
@@ -316,7 +309,7 @@ public class Main extends SimpleApplication {
         
         List<FaseEjecucion> fases = new ArrayList<>();
         fases.add(new FaseEjecucionComprobacionTamano());
-        
+        fases.add(new FaseEjecucionMovimientosAparcado());
         
         FaseEjecucion[] fasearray = new FaseEjecucion[fases.size()];
         fasearray = fases.toArray(fasearray);
@@ -325,6 +318,7 @@ public class Main extends SimpleApplication {
         
         List<String> tablas = new ArrayList<>();
         tablas.add("ComprobacionTamano");
+        tablas.add("MovimientosAparcado");
         
         
         String[] tablasarray = new String[tablas.size()];

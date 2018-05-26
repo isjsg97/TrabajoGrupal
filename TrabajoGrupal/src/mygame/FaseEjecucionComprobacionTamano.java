@@ -6,6 +6,8 @@
 package mygame;
 
 import com.jme3.math.Vector3f;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
@@ -19,6 +21,9 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
     
     float distanciaDelante;
     float distanciaAtras;
+    
+    Vector3f cocheDelante;
+    Vector3f cocheAtras;
     
     Vector3f[] coches;
     
@@ -37,11 +42,6 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
         
         coches = (Vector3f[])params[3];
     } 
-    
-    @Override
-    public void Ejecutar() {
-        
-    }
 
     @Override
     public boolean FaseCompletada() {
@@ -75,6 +75,10 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             }
             
             if(EsTamanoCorrecto(delante, atras)){
+                
+                cocheDelante = delante;
+                cocheAtras = atras;
+                
                 break;
             }else{
                 System.out.println("Distancia: " + delante.distance(atras) + " resultado es: " + false);
@@ -82,17 +86,12 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             
             atras = delante;
             
-            System.out.println("No muero :)");
+            //System.out.println("No muero :)");
         }
         
-        System.out.println("No muero ^_^");
+        //System.out.println("No muero ^_^");
         
         completado = true;
-    }
-    
-    
-    public void Ejecutar1(){
-        start();
     }
     
     
@@ -136,6 +135,17 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
         agente.Velocidad(velocidad);
         agente.Rotacion(angulo);
         agente.Tiempo(tiempo);
+    }
+
+    @Override
+    public Object[] Datos() {
+        List<Object> res = new ArrayList<>();
+        
+        res.add(cocheDelante);
+        res.add(cocheAtras);
+        
+        
+        return res.toArray();
     }
     
 }

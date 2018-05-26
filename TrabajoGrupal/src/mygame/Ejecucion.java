@@ -24,7 +24,7 @@ import weka.core.Instances;
  */
 public class Ejecucion extends Thread{
     
-    CocheIA cocheIA;
+    CocheIA agente;
     
     Vector3f[] coches;
     
@@ -50,7 +50,7 @@ public class Ejecucion extends Thread{
         main = m;
         
         coches = cars;
-        cocheIA = agent;
+        agente = agent;
     }
     
     
@@ -86,7 +86,8 @@ public class Ejecucion extends Thread{
         
         //ConseguirListaCoches();
         
-        
+        Vector3f cocheDelante = new Vector3f(0,0,0);
+        Vector3f cocheAtras = new Vector3f(0,0,0);
         
         
         for(int i = 0; i < fasesEjecucion.length; i++){
@@ -95,13 +96,22 @@ public class Ejecucion extends Thread{
             FaseEjecucion fase = fasesEjecucion[i];
             Instances casosEntrenamiento = ObtenerFicheroEntrenamiento(tabla);
             
+            
+            try {
+                conocimiento.buildClassifier(casosEntrenamiento);
+            } catch (Exception ex) {
+                Logger.getLogger(Ejecucion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             if(i == 0){
                 
-                fase.PrepararEjecucion(cocheIA, conocimiento, casosEntrenamiento, coches);
+                fase.PrepararEjecucion(agente, conocimiento, casosEntrenamiento, coches);
+                
+                
                 
             }else{
                 
-                fase.PrepararEjecucion(cocheIA, conocimiento, casosEntrenamiento);
+                fase.PrepararEjecucion(agente, conocimiento, casosEntrenamiento, cocheDelante, cocheAtras);
                 
             }
             
@@ -113,12 +123,29 @@ public class Ejecucion extends Thread{
                 System.out.println("Matame si puedes chaval");
                 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(Datos.tiempoEsperaThread);
                 }catch (InterruptedException ex) {
                     Logger.getLogger(Ejecucion.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("La hebra ce mamó");
                 }
             }
+            
+            agente.Tiempo(0);
+            
+            if(i == 0){
+                
+                Object[] datos = fase.Datos();
+                
+                cocheDelante = (Vector3f)datos[0];
+                cocheAtras = (Vector3f)datos[1];
+                
+            }else{
+
+                
+            }
+            
+            
+            
         }
         
         
