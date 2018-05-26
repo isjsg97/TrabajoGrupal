@@ -5,6 +5,7 @@
  */
 package mygame;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
 /**
@@ -20,6 +21,10 @@ public class Datos {
     
     public static Vector3f PosInicial(){
         return new Vector3f(offsetPocAgenteX,0,0);
+    }
+    
+    public static Quaternion RotInicial(){
+        return new Quaternion().fromAngles(0, 0, 0);
     }
     
     public static float DistanciaNecesaria(){

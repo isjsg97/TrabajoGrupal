@@ -71,6 +71,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         //tamanoCoche * 2 ya que los puntos están a mitad de los coches y entonces hay que añadrile un tamanoCoche debido a la suma de las mitades de los dos coches
         float espacio = Operaciones.EspacioMinimoAleatorio(); 
         
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+        
+        
         Main.SetPosicion(cocheDelante, new Vector3f(0,0,espacio/2));
         Main.SetPosicion(cocheAtras, new Vector3f(0,0,-espacio/2));
         
@@ -90,9 +100,19 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
     @Override
     void PreparacionAgente() {
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+        
         //agente.Spatial().setLocalTranslation(Datos.PosInicial());
         Main.SetPosicion(agente.Spatial(),Datos.PosInicial());
-        Main.SetRotacion(agente.Spatial(),new Quaternion().fromAngles(0, 0, 0));
+        Main.SetRotacion(agente.Spatial(),Datos.RotInicial());
         
                 
         while(Main.cambiospendientes){
@@ -120,6 +140,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
         //res = agente.Tiempo() <= 0 && agente.Colision() == null;
         
+        //Rotacion
         float [] rotCocheDelanteArray = new float[3]; 
         rotCocheDelanteArray = cocheDelante.getWorldRotation().toAngles(rotCocheDelanteArray);
         
@@ -133,12 +154,17 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         
         float rotagente = Operaciones.RadtoDeg(rotAgenteArray[1]);
         
+        //Posicion
+        
         float mediaposx = (cocheDelante.getWorldTranslation().x + cocheAtras.getWorldTranslation().x) / 2;
         float miposx = agente.Spatial().getWorldTranslation().x;
         
-        res = Math.abs(mediarot - rotagente) < 10 && Math.abs(mediaposx - miposx) < 0.5f;
+        /*float mediaposz = (cocheDelante.getWorldTranslation().z + cocheAtras.getWorldTranslation().z) / 2;
+        float miposz = agente.Spatial().getWorldTranslation().z;*/
         
-        System.out.println("Rotacion ideal: " + mediarot + ", Rotacion actual: " + rotagente + ", Resultado: " + res);
+        res = Math.abs(mediarot - rotagente) < 10 && Math.abs(mediaposx - miposx) < 0.25f;
+        
+        //System.out.println("Rotacion ideal: " + mediarot + ", Rotacion actual: " + rotagente + ", Resultado: " + res);
         
         return res;
     }
@@ -189,39 +215,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
    //Mirar Condiciones ifs
     void GuardarFracaso() {
-        Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
-        casoAdecidir.setDataset(casosEntrenamiento);
         
-        casoAdecidir.setValue(0, distanciaCocheDelante);
-        casoAdecidir.setValue(1, distanciaCocheAtras);
-        
-        if(fase <= 1){
-            casoAdecidir.setValue(2, velocidad1);
-            casoAdecidir.setValue(3, angulo1);
-            casoAdecidir.setValue(4, tiempo1);
-        }
-        
-        if(fase <= 2){
-            casoAdecidir.setValue(5, velocidad2);
-            casoAdecidir.setValue(6, angulo2);
-            casoAdecidir.setValue(7, tiempo2);
-        }
-        
-        if(fase <= 3){
-            casoAdecidir.setValue(8, velocidad3);
-            casoAdecidir.setValue(9, angulo3);
-            casoAdecidir.setValue(10, tiempo3);
-        }
-        
-        if(fase <= 4){
-            casoAdecidir.setValue(11, velocidad4);
-            casoAdecidir.setValue(12, angulo4);
-            casoAdecidir.setValue(13, tiempo4);
-        }
-
-        
-        casoAdecidir.setValue(14, 0);         
-        casosEntrenamiento.add(casoAdecidir);
     }
     
     
@@ -258,7 +252,40 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
     @Override
     void Guardar() {
+        Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
+        casoAdecidir.setDataset(casosEntrenamiento);
         
+        casoAdecidir.setValue(0, distanciaCocheDelante);
+        casoAdecidir.setValue(1, distanciaCocheAtras);
+        
+        //if(fase <= 1){
+            casoAdecidir.setValue(2, velocidad1);
+            casoAdecidir.setValue(3, angulo1);
+            casoAdecidir.setValue(4, tiempo1);
+        //}
+        
+       // if(fase <= 2){
+            casoAdecidir.setValue(5, velocidad2);
+            casoAdecidir.setValue(6, angulo2);
+            casoAdecidir.setValue(7, tiempo2);
+        //}
+        
+        //if(fase <= 3){
+            casoAdecidir.setValue(8, velocidad3);
+            casoAdecidir.setValue(9, angulo3);
+            casoAdecidir.setValue(10, tiempo3);
+        //}
+        
+        //if(fase <= 4){
+            casoAdecidir.setValue(11, velocidad4);
+            casoAdecidir.setValue(12, angulo4);
+            casoAdecidir.setValue(13, tiempo4);
+        //}
+
+        int res = EsExito() ? 1 : 0; //Solo comprueba funcion Exito;
+        
+        casoAdecidir.setValue(14, res);         
+        casosEntrenamiento.add(casoAdecidir);
     }
 
     @Override
@@ -298,6 +325,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     
     void PreFase1(){
         fase = 1;
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+        
         Main.SetPosicion(agente.Spatial(), posAgenteInicialFase1);
         Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase1);
         agente.Tiempo(0);
@@ -315,10 +352,10 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     
     void Fase1(){ //Se situa el agente al lado del coche de delante
         
-        posAgenteInicialFase1 = agente.Spatial().getWorldTranslation().clone();
-        rotAgenteInicialFase1 = agente.Spatial().getWorldRotation().clone();
+        posAgenteInicialFase1 = Datos.PosInicial();
+        rotAgenteInicialFase1 = Datos.RotInicial();
         
-        for(float distancia = -Datos.tamanoCoche/2; distancia < Datos.tamanoCoche/2; distancia += 0.5f){
+        for(float distancia = -Datos.tamanoCoche/2; distancia < Datos.tamanoCoche/4; distancia += 0.25f){
             PreFase1();
             
             //System.out.pr
@@ -359,6 +396,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     Quaternion rotAgenteInicialFase2;
     void PreFase2(){
         fase = 2;
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+        
         Main.SetPosicion(agente.Spatial(), posAgenteInicialFase2);
         Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase2);
         agente.Tiempo(0);
@@ -379,21 +426,21 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase2 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase2 = agente.Spatial().getWorldRotation().clone();
         
-        for(float velocidad = 0.5f ; velocidad < 1; velocidad += 0.5f){
-            for(float angulo = 5; angulo < 30; angulo += 5){
+        for(float velocidad = 0.20f ; velocidad < 0.4f; velocidad += 0.05f){
+            //for(float angulo = 20; angulo < 30; angulo += 1){
                 PreFase2();
                 
                 velocidad2 = -velocidad / multTiempo;
                 tiempo2 = tiempoEnManiobraEntrenando;
-                angulo2 = -angulo;
+                angulo2 = -30;
                 
                 agente.Velocidad(velocidad2);
                 agente.Rotacion(angulo2);
                 agente.Tiempo(tiempo2);
                 
-                while(agente.Tiempo() > 0 && agente.Colision() == null && agente.Spatial().getWorldTranslation().x > -1){
+                while(agente.Tiempo() > 0 && agente.Colision() == null && !FueraAcera()){
                     
-                     System.out.println(agente.Spatial().getWorldTranslation());
+                     //System.out.println(agente.Spatial().getWorldTranslation());
                     
                     if(agente.Spatial().getWorldTranslation().x <= -1){
                         System.out.println("ME HE PASADO");
@@ -413,7 +460,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                 if(agente.Colision() == null){
                     Fase3();
                 }
-            } 
+            //} 
         }
     }
     
@@ -421,6 +468,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
     Quaternion rotAgenteInicialFase3;
     void PreFase3(){
         fase = 3;
+        
+        while(Main.cambiospendientes){
+            try {
+                Thread.sleep(Datos.tiempoEsperaThread);
+            }catch (InterruptedException ex) {
+                Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("La hebra ce mamó");
+            }
+        }
+        
         Main.SetPosicion(agente.Spatial(), posAgenteInicialFase3);
         Main.SetRotacion(agente.Spatial(), rotAgenteInicialFase3);
         agente.Tiempo(0);
@@ -441,19 +498,19 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase3 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase3 = agente.Spatial().getWorldRotation().clone();
         
-        for(float velocidad = 0.5f ; velocidad < 1.5f; velocidad += 0.5f){
-            for(float angulo = 5; angulo < 30; angulo += 5){
+        for(float velocidad = 0.20f ; velocidad < 0.40f; velocidad += 0.05f){
+            //for(float angulo = 5; angulo < 30; angulo += 1){
                 PreFase3();
                 
                 velocidad3 = -velocidad / multTiempo;
                 tiempo3 = tiempoEnManiobraEntrenando;
-                angulo3 = angulo;
+                angulo3 = 30;
                 
                 agente.Velocidad(velocidad3);
                 agente.Rotacion(angulo3);
                 agente.Tiempo(tiempo3);
                 
-                while(agente.Tiempo() > 0 && agente.Colision() == null){
+                while(agente.Tiempo() > 0 && agente.Colision() == null && !FueraAcera() && !Chocado() && !EsExito()){
                     try {
                         Thread.sleep(Datos.tiempoEsperaThread);
                     }catch (InterruptedException ex) {
@@ -461,10 +518,12 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                         System.out.println("La hebra ce mamó");
                     }
                 }
+                //System.out.println("FLASE");
+                System.out.println("Colision: ");
                 
-                if(agente.Colision() == null && EsExito()){
+                if(agente.Colision() == null && EsExito() && !Chocado()){
                     
-                    System.out.print("TRUE");
+                    System.out.println("TRUE");
                     agente.Tiempo(0);
                     try {
                         Thread.sleep(2000);
@@ -473,7 +532,44 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                         System.out.println("La hebra ce mamó");
                     }
                 }
-            } 
+           // } 
         }
+    }
+    
+    
+    boolean Chocado(){
+        
+        boolean res = false;
+        
+        float distanciaAtras = agente.Spatial().getWorldTranslation().distance(cocheAtras.getWorldTranslation());
+        float distanciaDelante = agente.Spatial().getWorldTranslation().distance(cocheDelante.getWorldTranslation());
+        
+        float distanciaDelanteAtras = cocheAtras.getWorldTranslation().distance(cocheDelante.getWorldTranslation());
+        
+        boolean enmedio = distanciaDelanteAtras > distanciaAtras && distanciaDelanteAtras > distanciaDelante;
+        
+        if(enmedio){
+            res = distanciaAtras < Datos.tamanoCoche || distanciaDelante < Datos.tamanoCoche;
+        }else{
+            res = true;
+        }
+       
+        System.out.println("En medio: " + enmedio);
+        //System.out.println();
+        
+        
+        return res;
+    }
+    
+    boolean FueraAcera(){
+        
+        boolean res = false;
+        
+        //float distanciaAtras = agente.Spatial().getWorldTranslation().distance(cocheAtras.getWorldTranslation());
+        //float distanciaDelante = agente.Spatial().getWorldTranslation().distance(cocheDelante.getWorldTranslation());
+        
+        res = agente.Spatial().getWorldTranslation().x < -1;
+        
+        return res;
     }
 }

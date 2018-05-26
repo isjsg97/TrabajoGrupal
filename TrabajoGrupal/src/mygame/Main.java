@@ -14,6 +14,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -88,7 +90,7 @@ public class Main extends SimpleApplication {
         
         //Crear Rigidbody
         
-        Node coche = CrearCoche(true, pos);
+        Spatial coche = CrearCoche(true, pos);
         
         CocheIA res = new CocheIA(1, coche);
         estadosFisicos.getPhysicsSpace().addCollisionListener(res);
@@ -99,15 +101,18 @@ public class Main extends SimpleApplication {
         return res;
     }
     
-    public Node CrearCoche(boolean esIA, Vector3f pos){
+    public Spatial CrearCoche(boolean esIA, Vector3f pos){
         
         System.out.println("Creo coche en: " + pos);
         
-        Node res = new Node("Coche");
+        //Spatial res = new Node("Coche");
         
         Spatial buggy = assetManager.loadModel("/Models/Buggy/Buggy.j3o");
         
-        buggy.setLocalTranslation(0, 0.75f, 0);
+        Spatial res = buggy;
+        res.setName("Coche");
+        
+        buggy.setLocalTranslation(0, 0.15f, 0);
         
         //geometrybuggy = (Geometry) assetManager.loadModel("/Models/Buggy/Buggy.j3o");
         
@@ -118,7 +123,7 @@ public class Main extends SimpleApplication {
         buggy.scale(0.30f);
         buggy.setMaterial(mat);
         //geometrybuggy.setLocalTranslation(0, -1f, 0);
-        res.attachChild(buggy);
+        //res.attachChild(buggy);
         
         
         res.setLocalTranslation(pos);
@@ -128,7 +133,7 @@ public class Main extends SimpleApplication {
         if(!esIA){
         
             //Crear Rigidbody
-            RigidBodyControl fisica = new RigidBodyControl(0); //creación la fisicaBola con masa 1 Kg
+            RigidBodyControl fisica = new RigidBodyControl(10000); //creación la fisicaBola con masa 1 Kg
             res.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
             fisica.setRestitution(0.9f);
             res.addControl(fisica);
@@ -199,8 +204,9 @@ public class Main extends SimpleApplication {
     }
     
     void PonerCamara(){
-        cam.setLocation(new Vector3f(0,10,0));
-        //cam.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y);
+        //cam.setLocation(new Vector3f(0,10,0));
+        cam.setLocation(new Vector3f(2,0.1f,0));
+        cam.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y);
         
         cam.setRotation(new Quaternion().fromAngles(Operaciones.DegtoRad(90), Operaciones.DegtoRad(-90), 0));
         
@@ -240,7 +246,19 @@ public class Main extends SimpleApplication {
         }
         
         if(cambiospendientes){
-            for(CambioTransform cambio : cambios){
+            
+            
+            /*Iterator<CambioTransform> iter = cambios.iterator();
+
+            while (iter.hasNext()) {
+                CambioTransform cambio = iter.next();
+                
+                cambio.Cambiar();
+                
+                iter.remove();
+            }*/
+            
+           for(CambioTransform cambio : cambios){
                 cambio.Cambiar();
             }
             
@@ -252,7 +270,7 @@ public class Main extends SimpleApplication {
     }
     
     public static boolean cambiospendientes = false;
-    static List<CambioTransform> cambios = new Vector<>();
+    static List<CambioTransform> cambios = new LinkedList<>();
     
     public static void SetPosicion(Spatial s, Vector3f pos){
         cambios.add(new CambioTransform(s, pos, null));
@@ -275,8 +293,8 @@ public class Main extends SimpleApplication {
             entrenamiento = new EntrenamientoComprobacionTamano(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
         }else if(num == 1){
             agente = CrearCocheIA(Datos.PosInicial());
-            Node cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
-            Node cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
+            Spatial cocheDelante = CrearCoche(false, new Vector3f(0,0,0));
+            Spatial cocheAtras = CrearCoche(false, new Vector3f(0,0,0));
             
             entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 100, ObtenerClasificador(), cocheDelante, cocheAtras);
         }else{

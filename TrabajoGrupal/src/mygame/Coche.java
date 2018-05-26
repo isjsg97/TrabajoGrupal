@@ -20,6 +20,7 @@ import com.jme3.scene.Spatial;
  */
 public class Coche extends RigidBodyControl implements PhysicsTickListener, PhysicsCollisionListener{
 
+    boolean fisica;
     
     private float rotRuedas;
     private float velocidad;
@@ -34,6 +35,9 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         spatial = spat;
         
         tiempo = 0;
+        
+        colision = null;
+        fisica = false;
         
         colision = null;
     }
@@ -68,6 +72,9 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     
     public void Colision(PhysicsCollisionEvent col){
         colision = col;
+        
+        if(col != null)
+        System.out.println(col.getNodeB().getName());
     }
     public PhysicsCollisionEvent Colision(){
         return colision;
@@ -81,17 +88,27 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     @Override
     public void physicsTick(PhysicsSpace space, float tpf) {
         //System.out.println("TICK");
-        if(tiempo > 0 && colision == null){
+        if(tiempo > 0 && colision == null && !fisica){
             Avanzar(tpf);
             tiempo -= tpf;
             SincronizarRigidboyTransform();
+        }else{
+            //this.setLinearVelocity(new Vector3f(0,0,0));
         }
+        
+        //System.out.println("Velocidad: " + this.getLinearVelocity());
+        
+        //fisica = !fisica;
     }
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
         
         if(!event.getNodeB().getName().equals("Coche")){
+            
+            //System.out.println("A: " + event.getNodeA().getName());
+            //System.out.println("B: " + event.getNodeB().getName());
+            
             return;
         }
         
@@ -117,6 +134,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         
         mivel = Operaciones.RotarVectorY(mivel, Operaciones.RadtoDeg(-roty));
         
+        //fisicaCoche.setLinearVelocity(mivel.mult(tpf));
+        
         fisicaCoche.setPhysicsLocation(Operaciones.SumarVectores(fisicaCoche.getPhysicsLocation(), mivel.mult(tpf)));
         
         float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(rotRuedas)) * tpf;
@@ -134,8 +153,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     void SincronizarRigidboyTransform(){
         
         //Obtengo el transform del RigidBody
-        Quaternion rotRigid = spatial.getControl(RigidBodyControl.class).getPhysicsRotation();
-        Vector3f posRigid = spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        Quaternion rotRigid = getPhysicsRotation();
+        Vector3f posRigid = getPhysicsLocation();
         
         //Sincronizo el Spatial con su RigidBody
         spatial.setLocalRotation(rotRigid);
