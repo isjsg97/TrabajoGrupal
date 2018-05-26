@@ -51,7 +51,6 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
     @Override
     public void Ejecucion() {
         
-        System.out.println("ENTRO");
         Vector3f delante;
         Vector3f atras = coches[0];
         for(int i = 1; i < coches.length; i++){
@@ -65,7 +64,7 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
             agente.Tiempo(tiempo);
             
             while(agente.Tiempo() > 0){
-                System.out.println("No muero :D");
+                //System.out.println("No muero :D");
                 try {
                     Thread.sleep(Datos.tiempoEsperaThread);
                 }catch (InterruptedException ex) {
@@ -116,6 +115,8 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
         }
         
         return res == 1;
+        
+        //return false;
     }
 
     private void CalcularDatosPosicionInicial(Vector3f delante, Vector3f atras) {

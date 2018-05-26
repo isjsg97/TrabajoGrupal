@@ -41,7 +41,12 @@ public class  Operaciones {
     public static Vector3f RotarVectorY(Vector3f vector, float angulo){
         Vector3f res = new Vector3f(0,0,0);
         
+        
+        System.out.println("Angulo grados: " + angulo);
+        
         float rad = DegtoRad(angulo);
+        
+        System.out.println("Angulo radianes: " + rad);
         
         res.x = vector.x * (float)Math.cos(rad) - vector.z * (float)Math.sin(rad);
         res.z = vector.x * (float)Math.sin(rad) + vector.z * (float)Math.cos(rad);

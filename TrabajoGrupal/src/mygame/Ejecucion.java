@@ -120,7 +120,7 @@ public class Ejecucion extends Thread{
             
             while(!fase.FaseCompletada()){
                 
-                System.out.println("Matame si puedes chaval");
+                //System.out.println("Matame si puedes chaval");
                 
                 try {
                     Thread.sleep(Datos.tiempoEsperaThread);

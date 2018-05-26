@@ -89,14 +89,17 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     public void physicsTick(PhysicsSpace space, float tpf) {
         //System.out.println("TICK");
         if(tiempo > 0 && colision == null && !fisica){
+            SincronizarRigidboyTransform();
+            
             Avanzar(tpf);
             tiempo -= tpf;
-            SincronizarRigidboyTransform();
+            
+            SincronizarSpatialTransform();
         }else{
             //this.setLinearVelocity(new Vector3f(0,0,0));
         }
         
-        //System.out.println("Velocidad: " + this.getLinearVelocity());
+        //System.out.println("Posicion: " + Spatial().getWorldTranslation());
         
         //fisica = !fisica;
     }
@@ -127,7 +130,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
          
         Vector3f mivel = new Vector3f(0,0,velocidad);
         float[] ang = new float[3];
-        float roty = spatial.getWorldRotation().toAngles(ang)[1];
+        float roty = fisicaCoche.getPhysicsRotation().toAngles(ang)[1];
+        
         
         //System.out.println("Rot y: " + roty);
         //System.out.println("Rot y quaternion: " + spatial.getWorldRotation());
@@ -136,10 +140,12 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         
         //fisicaCoche.setLinearVelocity(mivel.mult(tpf));
         
+        
+        
         fisicaCoche.setPhysicsLocation(Operaciones.SumarVectores(fisicaCoche.getPhysicsLocation(), mivel.mult(tpf)));
         
         float rotacion = velocidad * (float)Math.sin(Operaciones.DegtoRad(rotRuedas)) * tpf;
-        spatial.rotate(0, rotacion, 0);
+        //spatial.rotate(0, rotacion, 0);
         
         Quaternion rotCoche = fisicaCoche.getPhysicsRotation();
         
@@ -148,9 +154,13 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         rotCocheArray = rotCoche.toAngles(rotCocheArray);       
         fisicaCoche.setPhysicsRotation(new Quaternion().fromAngles(0,rotCocheArray[1]+rotacion,0));
         
+        
+        System.out.println("Rotacion: " + roty);
+        
+        System.out.println("Velocidad: " + mivel);
     }
     
-    void SincronizarRigidboyTransform(){
+    void SincronizarSpatialTransform(){
         
         //Obtengo el transform del RigidBody
         Quaternion rotRigid = getPhysicsRotation();
@@ -159,5 +169,17 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         //Sincronizo el Spatial con su RigidBody
         spatial.setLocalRotation(rotRigid);
         spatial.setLocalTranslation(posRigid);
+    }
+    
+    
+    void SincronizarRigidboyTransform(){
+        
+        //Obtengo el transform del RigidBody
+        Quaternion rotRigid = spatial.getWorldRotation();
+        Vector3f posRigid = spatial.getWorldTranslation();
+        
+        //Sincronizo el Spatial con su RigidBody
+        this.setPhysicsLocation(posRigid);
+        this.setPhysicsRotation(rotRigid);
     }
 }

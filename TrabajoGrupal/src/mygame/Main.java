@@ -98,6 +98,11 @@ public class Main extends SimpleApplication {
         coche.addControl(res);
         estadosFisicos.getPhysicsSpace().add(res);
         
+        res.setAngularDamping(0);
+        res.setRestitution(0);
+        res.setFriction(0);
+        res.setLinearDamping(0);
+        
         return res;
     }
     
@@ -112,7 +117,7 @@ public class Main extends SimpleApplication {
         Spatial res = buggy;
         res.setName("Coche");
         
-        buggy.setLocalTranslation(0, 0.15f, 0);
+        buggy.setLocalTranslation(0, 0.25f, 0);
         
         //geometrybuggy = (Geometry) assetManager.loadModel("/Models/Buggy/Buggy.j3o");
         
@@ -194,12 +199,16 @@ public class Main extends SimpleApplication {
         
         
         RigidBodyControl fisica = new RigidBodyControl(0); //creación la fisicaBola con masa 1 Kg
-        geom.addControl( fisica ); //asociación entre geometry y física de bola - sin material bola_geo.addControl( fisicaBola ); //asociación entre geometry y física de bola estadosFisicos.getPhysicsSpace().add( fisicaBola ); //integración de fisicaBola en entorno físico
-        fisica.setRestitution(0.9f);
         geom.addControl(fisica);
         estadosFisicos.getPhysicsSpace().add( fisica );
             
         fisica.setPhysicsLocation(geom.getWorldTranslation());
+        
+        
+        fisica.setAngularDamping(1);
+        fisica.setRestitution(1);
+        fisica.setFriction(1);
+        fisica.setLinearDamping(1);
         
         rootNode.attachChild(geom);
     }
