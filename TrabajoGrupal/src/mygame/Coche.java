@@ -175,7 +175,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     void SincronizarRigidboyTransform(){
         
         //Obtengo el transform del RigidBody
-        Quaternion rotRigid = spatial.getWorldRotation();
+        Quaternion rotRigid = spatial.getLocalRotation();
         Vector3f posRigid = spatial.getWorldTranslation();
         
         //Sincronizo el Spatial con su RigidBody
