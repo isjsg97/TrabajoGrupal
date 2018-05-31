@@ -21,7 +21,7 @@ import weka.core.Instance;
 public class EntrenamientoMovimientosAparcado extends Entrenamiento{
 
     
-    float tiempoEnManiobraEntrenando = 0.25f;
+    float tiempoEnManiobraEntrenando = 0.1f;
     float multTiempo = tiempoEnManiobraEntrenando / Datos.tiempoEnManiobraEjecucion;
     
     
@@ -181,7 +181,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         /*float mediaposz = (cocheDelante.getWorldTranslation().z + cocheAtras.getWorldTranslation().z) / 2;
         float miposz = agente.Spatial().getWorldTranslation().z;*/
         
-        res = Math.abs(mediarot - rotagente) < 10 && Math.abs(mediaposx - miposx) < 0.15f;
+        res = Math.abs(0 - rotagente) < 0.1f && Math.abs(mediaposx - miposx) < 0.1f;
         
         //System.out.println("Rotacion ideal: " + mediarot + ", Rotacion actual: " + rotagente + ", Resultado: " + res);
         
@@ -395,13 +395,13 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase2 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase2 = agente.Spatial().getWorldRotation().clone();
         
-        for(float velocidad = 1f ; velocidad < 2f && !IteracionRealizada(); velocidad += 0.2f){
-            //for(float angulo = 20; angulo < 30 && !IteracionRealizada(); angulo += 1){
+        for(float angulo = 25; angulo < 35 && !IteracionRealizada(); angulo += 2){
+            for(float velocidad = 1.5f ; velocidad < 2.5f && !IteracionRealizada(); velocidad += 0.25f ){
                 PreFase2();
                 
                 velocidad2 = -velocidad;
                 tiempo2 = 1;
-                angulo2 = -30;
+                angulo2 = -angulo;
                 
                 agente.Velocidad(velocidad2 / tiempoEnManiobraEntrenando);
                 agente.Rotacion(angulo2);
@@ -426,10 +426,10 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                 
                 agente.Tiempo(0);
                 
-                if(agente.Colision() == null){
+                if(agente.Tiempo() <= 0 && agente.Colision() == null && !FueraAcera()){
                     Fase3(velocidad);
                 }
-            //} 
+            } 
         }
     }
     
@@ -477,16 +477,16 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         posAgenteInicialFase3 = agente.Spatial().getWorldTranslation().clone();
         rotAgenteInicialFase3 = agente.Spatial().getWorldRotation().clone();
         
-        //for(float velocidad = 1f ; velocidad < 2f && !IteracionRealizada(); velocidad += 0.2f){
-            //for(float angulo = 5; angulo < 30 && !IteracionRealizada(); angulo += 1){
-                //PreFase3();
+        for(float angulo = 25; angulo < 35 && !IteracionRealizada(); angulo += 2){
+            for(float velocidad = 1.5f ; velocidad < 2.5f && !IteracionRealizada(); velocidad += 0.25f ){
+                PreFase3();
                 
                 
-                //velocidad3 = -velocidad;
-                velocidad3 = -vel;
+                velocidad3 = -velocidad;
+                //velocidad3 = -vel;
                 
                 tiempo3 = 1;
-                angulo3 = 30;
+                angulo3 = angulo;
                 
                 agente.Velocidad(velocidad3 / tiempoEnManiobraEntrenando);
                 agente.Rotacion(angulo3);
@@ -501,25 +501,56 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
                     }
                 }
                 //System.out.println("FLASE");
-                System.out.println("Colision: ");
+                //System.out.println("Colision: ");
                 
                 agente.Tiempo(0);
                 
                 if(EsExito() && !encontradoExito){
                     
-                    System.out.println("TRUE");
+                    System.out.println("BUENO");
                     
                     Guardar();
                     encontradoExito = true;
                     
+                    
+                    try {
+                        Thread.sleep(5000);
+                    }catch (InterruptedException ex) {
+                        Logger.getLogger(EntrenamientoMovimientosAparcado.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("La hebra ce mamó");
+                    }
+                    
+                    
+                    System.out.println("DistanciaDelante = " + distanciaCocheDelante);
+                                    System.out.println("DistanciaDetras = " + distanciaCocheAtras);
+                                    
+                                    System.out.println("Velocidad1 = " + velocidad1);
+                                    System.out.println("Angulo1 = " + angulo1);
+                                    System.out.println("Tiempo1 = " + tiempo1);
+                                    
+                                    System.out.println("Velocidad2 = " + velocidad2);
+                                    System.out.println("Angulo2 = " + angulo2);
+                                    System.out.println("Tiempo2 = " + tiempo2);
+                                    
+                                    System.out.println("Velocidad3 = " + velocidad3);
+                                    System.out.println("Angulo3 = " + angulo3);
+                                    System.out.println("Tiempo3 = " + tiempo3);
+                                    
+                                    System.out.println("Velocidad4 = " + velocidad4);
+                                    System.out.println("Angulo4 = " + angulo4);
+                                    System.out.println("Tiempo4 = " + tiempo4);
+                    
+                    
+                    
+                    
                 }else if(!EsExito() && !encontradMalo && encontradoExito){
-                    System.out.println("TRUE");
+                    System.out.println("MALO");
                     
                     Guardar();
                     encontradMalo = true;
                 }
-           // } 
-        //}
+            } 
+        }
     }
     
     
@@ -540,7 +571,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
             res = true;
         }
        
-        System.out.println("En medio: " + enmedio);
+        //System.out.println("En medio: " + enmedio);
         //System.out.println();
         
         
@@ -554,7 +585,7 @@ public class EntrenamientoMovimientosAparcado extends Entrenamiento{
         //float distanciaAtras = agente.Spatial().getWorldTranslation().distance(cocheAtras.getWorldTranslation());
         //float distanciaDelante = agente.Spatial().getWorldTranslation().distance(cocheDelante.getWorldTranslation());
         
-        res = agente.Spatial().getWorldTranslation().x < -1;
+        res = agente.Spatial().getWorldTranslation().x < Datos.posicionAcerax;
         
         return res;
     }

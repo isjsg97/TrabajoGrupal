@@ -73,8 +73,8 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     public void Colision(PhysicsCollisionEvent col){
         colision = col;
         
-        if(col != null)
-        System.out.println(col.getNodeB().getName());
+        //if(col != null)
+        //System.out.println(col.getNodeB().getName());
     }
     public PhysicsCollisionEvent Colision(){
         return colision;
@@ -88,13 +88,15 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
     @Override
     public void physicsTick(PhysicsSpace space, float tpf) {
         //System.out.println("TICK");
-        if(tiempo > 0 && colision == null && !fisica){
+        //if(tiempo > 0 && colision == null && !fisica){
+        if(tiempo > 0){
             SincronizarRigidboyTransform();
             
             Avanzar(tpf);
+            SincronizarSpatialTransform();
             tiempo -= tpf;
             
-            SincronizarSpatialTransform();
+            
         }else{
             //this.setLinearVelocity(new Vector3f(0,0,0));
         }
@@ -118,7 +120,7 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         /*if(event.get){
             
         }*/
-        System.out.println("CHOQUE");
+        //System.out.println("CHOQUE");
         Colision(event);
     }
     
@@ -155,9 +157,9 @@ public class Coche extends RigidBodyControl implements PhysicsTickListener, Phys
         fisicaCoche.setPhysicsRotation(new Quaternion().fromAngles(0,rotCocheArray[1]+rotacion,0));
         
         
-        System.out.println("Rotacion: " + roty);
+        //System.out.println("Rotacion: " + roty);
         
-        System.out.println("Velocidad: " + mivel);
+        //System.out.println("Velocidad: " + mivel);
     }
     
     void SincronizarSpatialTransform(){

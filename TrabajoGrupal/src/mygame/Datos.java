@@ -18,9 +18,11 @@ public class Datos {
     public static float espacioManiobra = 2f;
     public static float offsetPocAgenteX = 1.5f;
     public static int tiempoEsperaThread = 1000 / 10;
+    public static float posicionAcerax = -1;
     
     
     public static float tiempoEnManiobraEjecucion = 2;
+    public static float tiempoEnManiobraEntrenando = 0.5f;
     
     public static Vector3f PosInicial(){
         return new Vector3f(offsetPocAgenteX,0,0);

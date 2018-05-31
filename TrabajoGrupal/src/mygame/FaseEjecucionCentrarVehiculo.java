@@ -57,7 +57,7 @@ public class FaseEjecucionCentrarVehiculo extends FaseEjecucion{
         PonerDatosCoche();
         
         while(agente.Tiempo() > 0){
-            System.out.println("No muero :D");
+            //System.out.println("No muero :D");
             try {
                 Thread.sleep(Datos.tiempoEsperaThread);
             }catch (InterruptedException ex) {

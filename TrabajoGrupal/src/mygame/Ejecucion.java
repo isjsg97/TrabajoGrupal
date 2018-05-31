@@ -148,6 +148,7 @@ public class Ejecucion extends Thread{
             
         }
         
+        System.out.println("FIN EJECUCION :D");
         
     }
     
