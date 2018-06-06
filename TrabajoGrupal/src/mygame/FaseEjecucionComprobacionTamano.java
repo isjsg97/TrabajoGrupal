@@ -73,10 +73,11 @@ public class FaseEjecucionComprobacionTamano extends FaseEjecucion{
                 }
             }
             
-            if(EsTamanoCorrecto(delante, atras)){
+            cocheDelante = delante;
+            cocheAtras = atras;
                 
-                cocheDelante = delante;
-                cocheAtras = atras;
+            
+            if(EsTamanoCorrecto(delante, atras)){
                 
                 break;
             }else{

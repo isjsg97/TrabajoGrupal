@@ -38,9 +38,6 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
     
     @Override
     void PreparacionDatos() {
-        
-        
-        
         distanciaCocheDelante = cocheDelante.distance(poscocheia);
         distanciaCocheAtras = cocheAtras.distance(poscocheia);
     }
@@ -75,13 +72,6 @@ public class EntrenamientoComprobacionTamano extends Entrenamiento{
         float distanciaDisponible = cocheDelante.distance(cocheAtras);
         
         boolean exito = distanciaDisponible >= distanciaNecesaria;
-        
-        
-        
-        System.out.println("DistanciaNecesaria: " + distanciaNecesaria);
-        System.out.println("DistanciaDisponible: " + distanciaDisponible);
-                
-        System.out.println("Exito: " + exito);
         
         return exito;
     }

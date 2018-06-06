@@ -63,7 +63,7 @@ public class Main extends SimpleApplication {
         
         /**/
         
-        //Entrenar(1);
+        //Entrenar(0);
         Ejecutar();
         
         /*Box b = new Box(1, 1, 1);
@@ -293,16 +293,16 @@ public class Main extends SimpleApplication {
         
         if(num == 0){
             agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
-            entrenamiento = new EntrenamientoComprobacionTamano(agente, this, "ComprobacionTamano", 100, ObtenerClasificador());
+            entrenamiento = new EntrenamientoComprobacionTamano(agente, this, "ComprobacionTamano", 2, ObtenerClasificador());
         }else if(num == 1){
             agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
             Spatial cocheDelante = CrearCoche(false, new Vector3f(0,0,0), Datos.RotInicial());
             Spatial cocheAtras = CrearCoche(false, new Vector3f(0,0,0), Datos.RotInicial());
             
-            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 20, ObtenerClasificador(), cocheDelante, cocheAtras);
+            entrenamiento = new EntrenamientoMovimientosAparcado(agente, this, "MovimientosAparcado", 2, ObtenerClasificador(), cocheDelante, cocheAtras);
         }else{
             agente = CrearCocheIA(Datos.PosInicial(), Datos.RotInicial());
-            entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "MovimientosCentrar", 100, ObtenerClasificador());
+            entrenamiento = new EntrenamientoCentrarVehiculo(agente, this, "MovimientosCentrar", 2, ObtenerClasificador());
         }
         
         entrenamiento.Entrenar();

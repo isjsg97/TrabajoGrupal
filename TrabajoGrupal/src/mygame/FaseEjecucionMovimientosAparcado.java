@@ -98,12 +98,16 @@ public class FaseEjecucionMovimientosAparcado extends FaseEjecucion{
     void ConseguirDatos(){
         int res = 0;
         
+        System.out.println("PoscionDelante: " + distanciaCocheDelante + ", PosicionAtras: " + distanciaCocheAtras);
+        
+        System.out.println("DistanciaDelante: " + distanciaCocheDelante + ", DistanciaAtras: " + distanciaCocheAtras);
+        
         distanciaCocheDelante = agente.Spatial().getWorldTranslation().distance(cocheDelante);
         distanciaCocheAtras = agente.Spatial().getWorldTranslation().distance(cocheAtras);
         
-        //System.out.println("PoscionDelante: " + distanciaCocheDelante + ", PosicionAtras: " + distanciaCocheAtras);
+        System.out.println("PoscionDelante: " + distanciaCocheDelante + ", PosicionAtras: " + distanciaCocheAtras);
         
-        //System.out.println("DistanciaDelante: " + distanciaCocheDelante + ", DistanciaAtras: " + distanciaCocheAtras);
+        System.out.println("DistanciaDelante: " + distanciaCocheDelante + ", DistanciaAtras: " + distanciaCocheAtras);
  
         boolean encontrado = false;
         

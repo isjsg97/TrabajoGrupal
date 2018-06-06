@@ -1,0 +1,9 @@
+@relation ComprobacionTamano
+
+@attribute distanciaCocheDelante numeric
+@attribute distanciaCocheAtras numeric
+@attribute tamanosuficiente numeric
+
+@data
+2.93134,2.93134,0
+2.341369,2.341369,0
